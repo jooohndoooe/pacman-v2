@@ -64,6 +64,7 @@ namespace PacMan_v2
                 Load();
             }
         }
+        //
         public void Load() 
         {
             Console.SetCursorPosition(x, y);
