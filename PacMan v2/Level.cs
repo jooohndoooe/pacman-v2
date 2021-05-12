@@ -91,12 +91,14 @@ namespace PacMan_v2
             {
                 int temp = nu;
                 Random r = new Random();
+                again:
                 int x = r.Next() % (sizeX-2); x++;
                 int z = 0;
                 int[] arr = new int[sizeY];
                 z = -1;
                 for (int j = 0; j < sizeY; j++) { if (points[x,j] == ' ') { z++; arr[z] = j; } }
                 z++;
+                if (z == 0) { goto again; }
                 int y = r.Next() % z;
                 y = arr[y];
 

@@ -289,11 +289,6 @@ namespace PacMan_v2
                             column = 1;
                         }
                     }
-                    Game G2 = new Game();
-                    Console.SetCursorPosition(0, 25);
-                    Console.WriteLine(G2.TableSizeX(level));
-                    Console.WriteLine(G2.TableSizeY(level));
-                    Console.WriteLine(column);
                 }
             }
 
@@ -383,7 +378,24 @@ namespace PacMan_v2
                 waveOut.Play();
             }
             Game G = new Game();
-            Level L = new Level(G.TableSizeX(level), G.TableSizeY(level), 1, 1, G.LoadTable(level), difficulty);
+            Level L = new Level(G.TableSizeX(1), G.TableSizeY(1), 1, 1, G.LoadTable(1), difficulty);
+            if (level != 4)
+            {
+                L = new Level(G.TableSizeX(level), G.TableSizeY(level), 1, 1, G.LoadTable(level), difficulty);
+            }
+            else 
+            {
+                Random rr = new Random();
+                int xr = rr.Next() % 5 + 4;
+                int yr = rr.Next() % 5 + 4;
+                Table T = new Table(xr, yr);
+                MapElementTable MET = new MapElementTable(T);
+                MET.field[1, 1] = ' ';
+                MET.field[1, 2] = ' ';
+                MET.field[2, 1] = ' ';
+                MET.field[2, 2] = ' ';
+                L = new Level(MET.sizeX*5, MET.sizeY*5, MET.sizeX, MET.sizeX, MET.field, difficulty);
+            }
             L.Load();
             DotField D = new DotField(L);
             D.Load();
