@@ -75,6 +75,20 @@ namespace PacMan_v2
                 if (k == 4) { l[p, q] = false; r[p, q - 1] = false; }
             }
 
+            for (int i = 0; i < a; i++) {
+                for (int j = 0; j < b; j++) {
+                    if (r[i, j] == false && d[i, j] == false && u[i + 1, j + 1] == false && l[i + 1, j + 1] == false)
+                    {
+                        Random z = new Random();
+                        int t = z.Next() % 4;
+                        if (t == 0) { l[i, j + 1] = true; r[i, j]=true; }
+                        if (t == 1) { d[i, j] = true; u[i + 1, j] = true; }
+                        if (t == 2) { l[i + 1, j + 1] = true; r[i + 1, j] = true; }
+                        if (t == 3) { d[i, j + 1] = true; u[i + 1, j + 1] = true; }
+                    }
+                }
+            }
+
         }
 
         public bool isValid()
@@ -87,7 +101,7 @@ namespace PacMan_v2
             }
             arr[0, 0] = true;
 
-            for (int k = 0; k < x * y; k++) 
+            for (int k = 0; k < 2 * x * y; k++) 
             {
                 for (int i = 0; i < x; i++) {
                     for (int j = 0; j < y; j++) {
@@ -110,6 +124,7 @@ namespace PacMan_v2
                     }
                 }
             }
+
 
             bool ans = true;
 

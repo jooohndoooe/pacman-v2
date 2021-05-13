@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PacMan_v2
 {
-    class Player:Entity
+    public class Player:Entity
     {
         public int score { get; set; }
 

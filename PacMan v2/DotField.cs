@@ -33,7 +33,7 @@ namespace PacMan_v2
             this.current = this.max;
         }
 
-        public void Load()
+        public void Load()  
         {
             for (int i = 0; i < sizeX; i++)
             {

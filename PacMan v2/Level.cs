@@ -42,34 +42,36 @@ namespace PacMan_v2
                 z++;
                 int y = r.Next() % z;
                 y = arr[y];
+                int temp = nu;
 
-                if (d == 0)
+                if (d == 1)
                 {
                     this.enemies[i] = new Enemy(x, y, 'A', 1, 's');
                 }
-                if (d == 1) 
+                if (d == 2)
                 {
                     this.enemies[i] = new Enemy(x, y, 'A', 1, 'l');
                 }
-                if (d == 2) 
+                if (d == 3)
                 {
                     this.enemies[i] = new Enemy(x, y, 'A', 1, 'r');
                 }
-                if (d == 3) 
+                if (d == 4)
                 {
-                    if (i == 0) { this.enemies[i] = new Enemy(x, y, (char)nu, nu, 'p'); }
-                    if (i == 1) { this.enemies[i] = new Enemy(x, y, 'A', 1, 'i'); }
-                    if (i >= 2) { this.enemies[i] = new Enemy(x, y, 'A', 1, 'r'); }
+                    if (i == 0) { this.enemies[i] = new Enemy(x, y, (char)(nu + 48), nu, 'p'); if (temp >= 2) { temp--; } }
+                    if (i == 1) { this.enemies[i] = new Enemy(x, y, (char)(temp + 48), temp, 'i'); if (temp >= 2) { temp--; } }
+                    if (i >= 2) { this.enemies[i] = new Enemy(x, y, (char)(temp + 48), temp, 'r'); if (temp >= 2) { temp--; } }
                 }
-                if (d == 4) 
+                temp = nu;
+                if (d == 5)
                 {
-                    if (i == 0) { this.enemies[i] = new Enemy(x, y, (char)nu, nu, 'p'); }
-                    if (i == 1) { this.enemies[i] = new Enemy(x, y, 'A', 1, 'i'); }
-                    if (i >= 2) 
+                    if (i == 0) { this.enemies[i] = new Enemy(x, y, (char)(nu + 48), nu, 'p'); if (temp >= 2) { temp--; } }
+                    if (i == 1) { this.enemies[i] = new Enemy(x, y, (char)(temp + 48), temp, 'i'); if (temp >= 2) { temp--; } }
+                    if (i >= 2)
                     {
-                        z = r.Next()%2;
-                        if (z == 0) { this.enemies[i] = new Enemy(x, y, 'A', 1, 'r'); }
-                        if (z == 1) { this.enemies[i] = new Enemy(x, y, 'A', 1, 'g'); }
+                        z = r.Next() % 2;
+                        if (z == 0) { this.enemies[i] = new Enemy(x, y, (char)(temp + 48), temp, 'r'); if (temp >= 2) { temp--; } }
+                        if (z == 1) { this.enemies[i] = new Enemy(x, y, (char)(temp + 48), temp, 'g'); if (temp >= 2) { temp--; } }
                     }
                 }
             }            
@@ -102,34 +104,34 @@ namespace PacMan_v2
                 int y = r.Next() % z;
                 y = arr[y];
 
-                if (d == 0)
+                if (d == 1)
                 {
                     this.enemies[i] = new Enemy(x, y, 'A', 1, 's');
                 }
-                if (d == 1)
+                if (d == 2)
                 {
                     this.enemies[i] = new Enemy(x, y, 'A', 1, 'l');
                 }
-                if (d == 2)
+                if (d == 3)
                 {
                     this.enemies[i] = new Enemy(x, y, 'A', 1, 'r');
                 }
-                if (d == 3)
-                {
-                    if (i == 0) { this.enemies[i] = new Enemy(x, y, (char)nu, nu, 'p'); if (temp >= 2) { temp--; } }
-                    if (i == 1) { this.enemies[i] = new Enemy(x, y, (char)temp, temp, 'i'); if (temp >= 2) { temp--; } }
-                    if (i >= 2) { this.enemies[i] = new Enemy(x, y, (char)temp, temp, 'r'); if (temp >= 2) { temp--; } }
-                }
-                temp = nu;
                 if (d == 4)
                 {
-                    if (i == 0) { this.enemies[i] = new Enemy(x, y, (char)nu, nu, 'p'); if (temp >= 2) { temp--; } }
-                    if (i == 1) { this.enemies[i] = new Enemy(x, y, (char)temp, temp, 'i'); if (temp >= 2) { temp--; } }
+                    if (i == 0) { this.enemies[i] = new Enemy(x, y, (char)(nu + 48), nu, 'p'); if (temp >= 2) { temp--; } }
+                    if (i == 1) { this.enemies[i] = new Enemy(x, y, (char)(temp + 48), temp, 'i'); if (temp >= 2) { temp--; } }
+                    if (i >= 2) { this.enemies[i] = new Enemy(x, y, (char)(temp + 48), temp, 'r'); if (temp >= 2) { temp--; } }
+                }
+                temp = nu;
+                if (d == 5)
+                {
+                    if (i == 0) { this.enemies[i] = new Enemy(x, y, (char)(nu + 48), nu, 'p'); if (temp >= 2) { temp--; } }
+                    if (i == 1) { this.enemies[i] = new Enemy(x, y, (char)(temp + 48), temp, 'i'); if (temp >= 2) { temp--; } }
                     if (i >= 2)
                     {
                         z = r.Next() % 2;
-                        if (z == 0) { this.enemies[i] = new Enemy(x, y, (char)temp, temp, 'r'); if (temp >= 2) { temp--; } }
-                        if (z == 1) { this.enemies[i] = new Enemy(x, y, (char)temp, temp, 'g'); if (temp >= 2) { temp--; } }
+                        if (z == 0) { this.enemies[i] = new Enemy(x, y, (char)(temp + 48), temp, 'r'); if (temp >= 2) { temp--; } }
+                        if (z == 1) { this.enemies[i] = new Enemy(x, y, (char)(temp + 48), temp, 'g'); if (temp >= 2) { temp--; } }
                     }
                 }
             }
@@ -160,35 +162,35 @@ namespace PacMan_v2
                 int y = arr[i, 1];
                 int temp = nu;
 
-                if (d == 0)
+                if (d == 1)
                 {
                     this.enemies[i] = new Enemy(x, y, 'A', 1, 's');
                 }
-                if (d == 1)
+                if (d == 2)
                 {
                     this.enemies[i] = new Enemy(x, y, 'A', 1, 'l');
                 }
-                if (d == 2)
+                if (d == 3)
                 {
                     this.enemies[i] = new Enemy(x, y, 'A', 1, 'r');
                 }
-                if (d == 3)
-                {
-                    if (i == 0) { this.enemies[i] = new Enemy(x, y, (char)nu, nu, 'p'); if (temp >= 2) { temp--; } }
-                    if (i == 1) { this.enemies[i] = new Enemy(x, y, (char)temp, temp, 'i'); if (temp >= 2) { temp--; } }
-                    if (i >= 2) { this.enemies[i] = new Enemy(x, y, (char)temp, temp, 'r'); if (temp >= 2) { temp--; } }
-                }
-                temp = nu;
                 if (d == 4)
                 {
-                    if (i == 0) { this.enemies[i] = new Enemy(x, y, (char)nu, nu, 'p'); if (temp >= 2) { temp--; } }
-                    if (i == 1) { this.enemies[i] = new Enemy(x, y, (char)temp, temp, 'i'); if (temp >= 2) { temp--; } }
+                    if (i == 0) { this.enemies[i] = new Enemy(x, y, (char)(nu + 48), nu, 'p'); if (temp >= 2) { temp--; } }
+                    if (i == 1) { this.enemies[i] = new Enemy(x, y, (char)(temp + 48), temp, 'i'); if (temp >= 2) { temp--; } }
+                    if (i >= 2) { this.enemies[i] = new Enemy(x, y, (char)(temp + 48), temp, 'r'); if (temp >= 2) { temp--; } }
+                }
+                temp = nu;
+                if (d == 5)
+                {
+                    if (i == 0) { this.enemies[i] = new Enemy(x, y, (char)(nu + 48), nu, 'p'); if (temp >= 2) { temp--; } }
+                    if (i == 1) { this.enemies[i] = new Enemy(x, y, (char)(temp + 48), temp, 'i'); if (temp >= 2) { temp--; } }
                     if (i >= 2)
                     {
                         Random r = new Random();
                         int z = r.Next() % 2;
-                        if (z == 0) { this.enemies[i] = new Enemy(x, y, (char)temp, temp, 'r'); if (temp >= 2) { temp--; } }
-                        if (z == 1) { this.enemies[i] = new Enemy(x, y, (char)temp, temp, 'g'); if (temp >= 2) { temp--; } }
+                        if (z == 0) { this.enemies[i] = new Enemy(x, y, (char)(temp + 48), temp, 'r'); if (temp >= 2) { temp--; } }
+                        if (z == 1) { this.enemies[i] = new Enemy(x, y, (char)(temp + 48), temp, 'g'); if (temp >= 2) { temp--; } }
                     }
                 }
             }
@@ -226,21 +228,21 @@ namespace PacMan_v2
                 }
                 if (d == 4)
                 {
-                    if (i == 0) { this.enemies[i] = new Enemy(x, y, (char)nu, nu, 'p'); if (temp >= 2) { temp--; } }
-                    if (i == 1) { this.enemies[i] = new Enemy(x, y, (char)temp, temp, 'i'); if (temp >= 2) { temp--; } }
-                    if (i >= 2) { this.enemies[i] = new Enemy(x, y, (char)temp, temp, 'r'); if (temp >= 2) { temp--; } }
+                    if (i == 0) { this.enemies[i] = new Enemy(x, y, (char)(nu + 48), nu, 'p'); if (temp >= 2) { temp--; } }
+                    if (i == 1) { this.enemies[i] = new Enemy(x, y, (char)(temp + 48), temp, 'i'); if (temp >= 2) { temp--; } }
+                    if (i >= 2) { this.enemies[i] = new Enemy(x, y, (char)(temp + 48), temp, 'r'); if (temp >= 2) { temp--; } }
                 }
                 temp = nu;
                 if (d == 5)
                 {
-                    if (i == 0) { this.enemies[i] = new Enemy(x, y, (char)nu, nu, 'p'); if (temp >= 2) { temp--; } }
-                    if (i == 1) { this.enemies[i] = new Enemy(x, y, (char)temp, temp, 'i'); if (temp >= 2) { temp--; } }
+                    if (i == 0) { this.enemies[i] = new Enemy(x, y, (char)(nu + 48), nu, 'p'); if (temp >= 2) { temp--; } }
+                    if (i == 1) { this.enemies[i] = new Enemy(x, y, (char)(temp + 48), temp, 'i'); if (temp >= 2) { temp--; } }
                     if (i >= 2)
                     {
                         Random r = new Random();
                         int z = r.Next() % 2;
-                        if (z == 0) { this.enemies[i] = new Enemy(x, y, (char)temp, temp, 'r'); if (temp >= 2) { temp--; } }
-                        if (z == 1) { this.enemies[i] = new Enemy(x, y, (char)temp, temp, 'g'); if (temp >= 2) { temp--; } }
+                        if (z == 0) { this.enemies[i] = new Enemy(x, y, (char)(temp + 48), temp, 'r'); if (temp >= 2) { temp--; } }
+                        if (z == 1) { this.enemies[i] = new Enemy(x, y, (char)(temp + 48), temp, 'g'); if (temp >= 2) { temp--; } }
                     }
                 }
             }

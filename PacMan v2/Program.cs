@@ -72,8 +72,8 @@ namespace PacMan_v2
 
             bool ActiveStatus = true;
 
-
             
+
             while (ActiveStatus==true) {
                 if (Console.KeyAvailable) 
                 {
@@ -310,6 +310,8 @@ namespace PacMan_v2
             Console.WriteLine();
             Console.WriteLine("                                                                                                       Back                      ");
             Console.WriteLine("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+
+            
             while (ActiveStatus == true)
             {
                 if (Console.KeyAvailable)
@@ -403,7 +405,7 @@ namespace PacMan_v2
             U.Load();
             Player P1 = new Player(1, 1, 1); P1.Load();
             Player P2 = new Player(1, 0, 0);
-            
+
             for (int i = 0; i < L.NumberOfEnemies; i++) { L.enemies[i].Load(); }
             if (mode == "SinglePlayer")
             {
@@ -446,13 +448,14 @@ namespace PacMan_v2
                 }
 
                 for (int i = 0; i < L.NumberOfEnemies; i++) { 
-                    L.enemies[i].Go(L, D, U);
                     if (mode == "SinglePlayer") 
                     {
-                        if(P1.x == L.enemies[i].x && P1.y == L.enemies[i].y) { if (L.enemies[i].lvl < P1.lvl) { L.enemies[i] = new Enemy(0, 0, '#', 's'); } else { goto Death; } }
+                        L.enemies[i].Go(L, D, U, P1, P1);
+                        if (P1.x == L.enemies[i].x && P1.y == L.enemies[i].y) { if (L.enemies[i].lvl < P1.lvl) { L.enemies[i] = new Enemy(0, 0, '#', 's'); } else { goto Death; } }
                     }
                     else
                     {
+                        L.enemies[i].Go(L, D, U, P1, P2);
                         if (P1.x == L.enemies[i].x && P1.y == L.enemies[i].y) { if (L.enemies[i].lvl < P1.lvl) { L.enemies[i] = new Enemy(0, 0, '#', 's'); } else { goto P1Died; } }
                         if (P2.x == L.enemies[i].x && P2.y == L.enemies[i].y) { if (L.enemies[i].lvl < P2.lvl) { L.enemies[i] = new Enemy(0, 0, '#', 's'); } else { goto P2Died; } }
                     }
