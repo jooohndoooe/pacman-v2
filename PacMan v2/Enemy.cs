@@ -40,7 +40,7 @@ namespace PacMan_v2
                 if (direction == 'u') { if (L.field[x, y - 1].lvl < lvl) { if (U.field[x, y].status == true) { U.field[x, y].Draw(); } else { D.field[x, y].Draw(); } this.y--; } else { Random r = new Random(); int q = r.Next() % 2; if (q == 0) { direction = 'l'; } else { direction = 'r'; } } }
                 if (direction == 'd') { if (L.field[x, y + 1].lvl < lvl) { if (U.field[x, y].status == true) { U.field[x, y].Draw(); } else { D.field[x, y].Draw(); } this.y++; } else { Random r = new Random(); int q = r.Next() % 2; if (q == 0) { direction = 'l'; } else { direction = 'r'; } } }
             }
-            if (role == 'i') 
+            if (role == 'p') 
             {
                 if (distance(P1.x, P1.y, L) < distance(P2.x, P2.y, L))
                 {
@@ -57,7 +57,7 @@ namespace PacMan_v2
                     if (FindPath(P2.x, P2.y, L) == 'd') { if (L.field[x, y + 1].lvl < lvl) { if (U.field[x, y].status == true) { U.field[x, y].Draw(); } else { D.field[x, y].Draw(); } this.y++; } }
                 }
             }
-            if (role == 'p')
+            if (role == 'i')
             {
                 Console.SetCursorPosition(50, 50);
                 int px = PredictedX(L, P1);
