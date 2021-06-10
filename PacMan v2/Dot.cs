@@ -18,7 +18,7 @@ namespace PacMan_v2
         {
             this.status = false;
             this.ch = ' ';
-            Draw();
+           // Draw();
         }
     }
 }

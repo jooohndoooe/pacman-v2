@@ -8,18 +8,18 @@ namespace PacMan_v2
 {
     public class MapElement
     {
-        public bool u { get; set; }
-        public bool d { get; set; }
-        public bool l { get; set; }
-        public bool r { get; set; }
+        public bool LockedUp { get; set; }
+        public bool LockedDown { get; set; }
+        public bool LockedLeft { get; set; }
+        public bool LockedRight { get; set; }
         public char[,] element { get; set; }
 
-        public MapElement(bool a, bool b, bool c, bool d)
+        public MapElement(bool LockedUp, bool LockedRight, bool LockedDown, bool LockedLeft)
         {
-            this.u = a;
-            this.r = b;
-            this.d = c;
-            this.l = d;
+            this.LockedUp = LockedUp;
+            this.LockedRight = LockedRight;
+            this.LockedDown = LockedDown;
+            this.LockedLeft = LockedLeft;
 
             this.element = new char[5, 5];
             this.element[0, 0] = '#'; this.element[0, 1] = '#'; this.element[0, 2] = '#'; this.element[0, 3] = '#'; this.element[0, 4] = '#';
@@ -27,17 +27,17 @@ namespace PacMan_v2
             this.element[2, 0] = '#'; this.element[2, 1] = ' '; this.element[2, 2] = ' '; this.element[2, 3] = ' '; this.element[2, 4] = '#';
             this.element[3, 0] = '#'; this.element[3, 1] = ' '; this.element[3, 2] = ' '; this.element[3, 3] = ' '; this.element[3, 4] = '#';
             this.element[4, 0] = '#'; this.element[4, 1] = '#'; this.element[4, 2] = '#'; this.element[4, 3] = '#'; this.element[4, 4] = '#';
-            Random y = new Random();
+            Random r = new Random();
 
 
-            int k = 0;
-            int x = 0;
-            int[] arr = new int[4];
-            if (b == false)
+            int RandomSwitch = 0;
+            List<string> LockedSides = new List<string>();
+
+            if (LockedRight == false)
             {
-                x = y.Next() % 2;
+                RandomSwitch = r.Next() % 2;
                 this.element[4, 2] = ' ';
-                if (x == 0)
+                if (RandomSwitch == 0)
                 {
                     this.element[4, 1] = ' ';
                     this.element[4, 3] = ' ';
@@ -45,14 +45,14 @@ namespace PacMan_v2
             }
             else 
             {
-                arr[k] = 1;
-                k++;
+                LockedSides.Add("Right");
             }
-            if (c== false)
+
+            if (LockedDown== false)
             {
-                x = y.Next() % 2;
+                RandomSwitch = r.Next() % 2;
                 this.element[2, 0] = ' ';
-                if (x == 0)
+                if (RandomSwitch == 0)
                 {
                     this.element[1, 0] = ' ';
                     this.element[3, 0] = ' ';
@@ -60,14 +60,14 @@ namespace PacMan_v2
             }
             else
             {
-                arr[k] = 2;
-                k++;
+                LockedSides.Add("Down");
             }
-            if (d == false)
+
+            if (LockedLeft == false)
             {
-                x = y.Next() % 2;
+                RandomSwitch = r.Next() % 2;
                 this.element[0, 2] = ' ';
-                if (x == 0)
+                if (RandomSwitch == 0)
                 {
                     this.element[0, 1] = ' ';
                     this.element[0, 3] = ' ';
@@ -75,14 +75,14 @@ namespace PacMan_v2
             }
             else
             {
-                arr[k] = 3;
-                k++;
+                LockedSides.Add("Left");
             }
-            if (a == false)
+
+            if (LockedUp == false)
             {
-                x = y.Next() % 2;
+                RandomSwitch = r.Next() % 2;
                 this.element[2, 4] = ' ';
-                if (x == 0)
+                if (RandomSwitch == 0)
                 {
                     this.element[1, 4] = ' ';
                     this.element[3, 4] = ' ';
@@ -90,37 +90,39 @@ namespace PacMan_v2
             }
             else
             {
-                arr[k] = 4;
-                k++;
+                LockedSides.Add("Up");
             }
-            if (k != 0)
-            {
-                k = y.Next() % k;
-                k = arr[k];
 
-                if (k == 1)
+
+
+            if (LockedSides.Count != 0)
+            {
+                string RandomSide = LockedSides[r.Next() % LockedSides.Count];
+
+                if (RandomSide == "Right")
                 {
                     this.element[3, 2] = '#';
                     this.element[2, 2] = '#';
                 }
-                if (k == 2)
+                if (RandomSide == "Down")
                 {
                     this.element[2, 1] = '#';
                     this.element[2, 2] = '#';
                 }
-                if (k == 3)
+                if (RandomSide == "Left")
                 {
                     this.element[1, 2] = '#';
                     this.element[2, 2] = '#';
                 }
-                if (k == 4)
+                if (RandomSide == "Up")
                 {
                     this.element[2, 3] = '#';
                     this.element[2, 2] = '#';
                 }
             }
-            x = y.Next() % 2;
-            if (x == 0)
+
+            RandomSwitch = r.Next() % 2;
+            if (RandomSwitch == 0)
             {
                 this.element[2, 2] = '#';
             }

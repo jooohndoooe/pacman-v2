@@ -29,18 +29,15 @@ namespace PacMan_v2
 
             for (int i = 0; i < max; i++) 
             {
-                again:
                 Random r = new Random();
-                int x = r.Next() % (L.sizeX - 2)+1;
+                int RandomX = r.Next() % (L.sizeX - 2)+1;
                 int z = -1;
-                int[] arr = new int[sizeY];
-                for (int j = 0; j < sizeY; j++) { if (L.field[x, j].lvl == 0) { z++; arr[z] = j; } }
-                z++;
-                int y = r.Next() % z;
-                y = arr[y];
-                if ((x == 1 && y == 1) || (x == sizeX - 2 && y == sizeY - 2) || D.field[x, y].status == false) { goto again; }
-                D.Delete(x, y);
-                this.field[x, y] = new Upgrade(x, y, true);
+                List<int> PossibleY = new List<int>();
+                for (int j = 0; j < sizeY; j++) { if (L.field[RandomX, j].lvl == 0) { PossibleY.Add(j); } }
+                int RandomY = PossibleY[r.Next() % PossibleY.Count];
+                if ((RandomX == 1 && RandomY == 1) || (RandomX == sizeX - 2 && RandomY == sizeY - 2) || D.field[RandomX, RandomY].status == false) { i--; continue; }
+                D.Delete(RandomX, RandomY);
+                this.field[RandomX, RandomY] = new Upgrade(RandomX, RandomY, true);
             }
         }
 
@@ -58,9 +55,9 @@ namespace PacMan_v2
             }
         }
 
-        public int Take(int a, int b)
+        public int Take(int x, int y)
         {
-            if (field[a, b].status == true) { field[a, b].Take(); this.current--; return 1; } else { return 0; }
+            if (field[x, y].status == true) { field[x, y].Take(); this.current--; return 1; } else { return 0; }
         }
     }
 }

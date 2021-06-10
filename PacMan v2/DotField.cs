@@ -11,10 +11,10 @@ namespace PacMan_v2
         public Dot[,] field { get; set; }
         public int sizeX { get; set; }
         public int sizeY { get; set; }
-        public int max { get; set; }
-        public int current { get; set; }
+        public int MaxScore { get; set; }
+        public int CurrentLeft { get; set; }
         public DotField(Level L) {
-            max = 0;
+            MaxScore = 0;
             field = new Dot[L.sizeX, L.sizeY];
             this.sizeX = L.sizeX;
             this.sizeY = L.sizeY;
@@ -22,7 +22,7 @@ namespace PacMan_v2
                 for (int j = 0; j < L.sizeY; j++) {
                     if (L.field[i, j].ch == ' ')
                     {
-                        field[i, j] = new Dot(i, j, true); this.max++;
+                        field[i, j] = new Dot(i, j, true); this.MaxScore++;
                     }
                     else 
                     { 
@@ -30,7 +30,7 @@ namespace PacMan_v2
                     }
                 }
             }
-            this.current = this.max;
+            this.CurrentLeft = this.MaxScore;
         }
 
         public void Load()  
@@ -49,12 +49,12 @@ namespace PacMan_v2
 
         public int Take(int a,int b)
         {
-            if (field[a, b].status == true) { field[a, b].Take(); this.current--; return 1; } else { return 0; }
+            if (field[a, b].status == true) { field[a, b].Take(); this.CurrentLeft--; return 1; } else { return 0; }
         }
 
         public void Delete(int a, int b)
         {
-            if (field[a, b].status == true) { field[a, b].Take(); this.current--; this.max--; }
+            if (field[a, b].status == true) { field[a, b].Take(); this.CurrentLeft--; this.MaxScore--; }
         }
     }
 }

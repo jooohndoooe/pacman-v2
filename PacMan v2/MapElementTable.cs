@@ -15,15 +15,15 @@ namespace PacMan_v2
 
         public MapElementTable(Table T) 
         {
-            this.sizeX = T.x;
-            this.sizeY = T.y;
+            this.sizeX = T.height;
+            this.sizeY = T.width;
             this.elements = new MapElement[sizeX, sizeY];
             for (int i = 0; i < sizeX; i++) {
                 for (int j = 0; j < sizeY; j++) {
-                    this.elements[i, j] = new MapElement(T.u[i,j], T.r[i, j], T.d[i, j], T.l[i, j]);
+                    this.elements[i, j] = new MapElement(T.LockedUp[i,j], T.LockedRight[i, j], T.LockedDown[i, j], T.LockedLeft[i, j]);
                 }
             }
-            this.field = new char[sizeX * 5, sizeY * 5];
+            this.field = new char[sizeX * 4 + 1, sizeY * 4 + 1];
             for (int i = sizeX-1; i >= 0; i--)
             {
                 for (int j = 0; j < sizeY; j++)
@@ -32,11 +32,19 @@ namespace PacMan_v2
                     
                     for (int p = 0; p < 5; p++) {
                         for (int q = 0; q < 5; q++) {
-                            field[5 * i + p, 5 * j + q] = elements[i, j].element[q, 4 - p];
+                            field[4 * i + p, 4 * j + q] = elements[i, j].element[q, 4 - p];
                         }
                     }
                 }
             }
+            this.sizeX = 4 * T.height + 1;
+            this.sizeY = 4 * T.width + 1;
+            field[1, 1] = ' ';
+            field[1, 2] = ' ';
+            field[2, 1] = ' ';
+            field[sizeX - 2, sizeY - 2] = ' ';
+            field[sizeX - 2, sizeY - 3] = ' ';
+            field[sizeX - 3, sizeY - 2] = ' ';
         }
     }
 }

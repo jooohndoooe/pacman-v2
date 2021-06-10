@@ -8,83 +8,80 @@ namespace PacMan_v2
 {
     public class Table
     {
-        public int x { get; set; }
-        public int y { get; set; }
-        public bool[,] u { get; set; }
-        public bool[,] r { get; set; }
-        public bool[,] l { get; set; }
-        public bool[,] d { get; set; }
+        public int height { get; set; }
+        public int width { get; set; }
+        public bool[,] LockedUp { get; set; }
+        public bool[,] LockedRight { get; set; }
+        public bool[,] LockedLeft { get; set; }
+        public bool[,] LockedDown { get; set; }
 
-        public Table(int a, int b)
+        public Table(int height, int width)
         {
-            this.x = a;
-            this.y = b;
-            u = new bool[a, b];
-            r = new bool[a, b];
-            d = new bool[a, b];
-            l = new bool[a, b];
-            for (int i = 0; i < a; i++) {
-                for (int j = 0; j < b; j++) {
-                    u[i, j] = true;
-                    r[i, j] = true;
-                    d[i, j] = true;
-                    l[i, j] = true;
+            height = 3;
+            width = 5;
+            this.height = height;
+            this.width = width;
+            
+            LockedUp = new bool[height, width];
+            LockedRight = new bool[height, width];
+            LockedDown = new bool[height, width];
+            LockedLeft = new bool[height, width];
+            for (int i = 0; i < height; i++) {
+                for (int j = 0; j < width; j++) {
+                    LockedUp[i, j] = true;
+                    LockedRight[i, j] = true;
+                    LockedDown[i, j] = true;
+                    LockedLeft[i, j] = true;
                 }
             }
 
-            while(isValid()==false)
+            Random r = new Random();
+
+            while (!isValid())
             {
-            again:
-                Random z = new Random();
-                int p = z.Next() % a;
-                int q = z.Next() % b;
-                int k = 0;
-                int[] arr = new int[4];
+                int y = r.Next() % height;
+                int x = r.Next() % width;
+                
+                List<string> LockedSides = new List<string>();
 
-                if (u[p, q] == true && p != 0)
+                if (LockedUp[y, x] && y > 0)
                 {
-                    arr[k] = 1;
-                    k++;
+                    LockedSides.Add("Up");
                 }
 
-                if (r[p, q] == true && q != b - 1)
+                if (LockedRight[y, x] && x < width - 1)
                 {
-                    arr[k] = 2;
-                    k++;
+                    LockedSides.Add("Right");
                 }
 
-                if (d[p, q] == true && p != a - 1)
+                if (LockedDown[y, x] && y < height - 1)
                 {
-                    arr[k] = 3;
-                    k++;
+                    LockedSides.Add("Down");
                 }
 
-                if (l[p, q] == true && q != 0)
+                if (LockedLeft[y, x] && x > 0)
                 {
-                    arr[k] = 4;
-                    k++;
+                    LockedSides.Add("Left");
                 }
-                if (k == 0) { goto again; }
+                if (LockedSides.Count() == 0) { continue; }
 
-                k = z.Next() % k;
-                k = arr[k];
+                string RandomDirection = LockedSides[r.Next(LockedSides.Count())];
 
-                if (k == 1) { u[p, q] = false; d[p - 1, q] = false; }
-                if (k == 2) { r[p, q] = false; l[p, q + 1] = false; }
-                if (k == 3) { d[p, q] = false; u[p + 1, q] = false; }
-                if (k == 4) { l[p, q] = false; r[p, q - 1] = false; }
+                if (RandomDirection == "Up") { LockedUp[y, x] = false; LockedDown[y - 1, x] = false; }
+                if (RandomDirection == "Right") { LockedRight[y, x] = false; LockedLeft[y, x + 1] = false; }
+                if (RandomDirection == "Down") { LockedDown[y, x] = false; LockedUp[y + 1, x] = false; }
+                if (RandomDirection == "Left") { LockedLeft[y, x] = false; LockedRight[y, x - 1] = false; }
             }
 
-            for (int i = 0; i < a; i++) {
-                for (int j = 0; j < b; j++) {
-                    if (r[i, j] == false && d[i, j] == false && u[i + 1, j + 1] == false && l[i + 1, j + 1] == false)
+            for (int i = 0; i < height; i++) {
+                for (int j = 0; j < width; j++) {
+                    if (LockedRight[i, j] == false && LockedDown[i, j] == false && LockedUp[i + 1, j + 1] == false && LockedLeft[i + 1, j + 1] == false)
                     {
-                        Random z = new Random();
-                        int t = z.Next() % 4;
-                        if (t == 0) { l[i, j + 1] = true; r[i, j]=true; }
-                        if (t == 1) { d[i, j] = true; u[i + 1, j] = true; }
-                        if (t == 2) { l[i + 1, j + 1] = true; r[i + 1, j] = true; }
-                        if (t == 3) { d[i, j + 1] = true; u[i + 1, j + 1] = true; }
+                        int t = r.Next() % 4;
+                        if (t == 0) { LockedLeft[i, j + 1] = true; LockedRight[i, j]=true; }
+                        if (t == 1) { LockedDown[i, j] = true; LockedUp[i + 1, j] = true; }
+                        if (t == 2) { LockedLeft[i + 1, j + 1] = true; LockedRight[i + 1, j] = true; }
+                        if (t == 3) { LockedDown[i, j + 1] = true; LockedUp[i + 1, j + 1] = true; }
                     }
                 }
             }
@@ -93,48 +90,53 @@ namespace PacMan_v2
 
         public bool isValid()
         {
-            bool[,] arr = new bool[x, y];
-            for (int i = 0; i < x; i++) {
-                for (int j = 0; j < y; j++) {
-                    arr[i, j] = false;
+            bool[,] AbleToPass = new bool[height, width];
+            for (int i = 0; i < height; i++) {
+                for (int j = 0; j < width; j++) {
+                    AbleToPass[i, j] = false;
                 }
             }
-            arr[0, 0] = true;
-
-            for (int k = 0; k < 2 * x * y; k++) 
-            {
-                for (int i = 0; i < x; i++) {
-                    for (int j = 0; j < y; j++) {
-                        if (i != 0)
-                        {
-                            if (u[i, j] == false && arr[i - 1, j] == true) { arr[i, j] = true; }
-                        }
-                        if (i != x - 1)
-                        {
-                            if (d[i, j] == false && arr[i + 1, j] == true) { arr[i, j] = true; }
-                        }
-                        if (j != y - 1)
-                        {
-                            if (r[i, j] == false && arr[i, j + 1] == true) { arr[i, j] = true; }
-                        }
-                        if (j != 0)
-                        {
-                            if (l[i, j] == false && arr[i, j - 1] == true) { arr[i, j] = true; }
-                        }
-                    }
+            AbleToPass[0, 0] = true;
+            AbleToPass=isValidRec(AbleToPass, 0, 0);
+            
+            for (int i = 0; i < height; i++) {
+                for (int j = 0; j < width; j++) {
+                    if (AbleToPass[i, j] == false) { return false; }
                 }
             }
 
+            return true;
+        }
 
-            bool ans = true;
-
-            for (int i = 0; i < x; i++) {
-                for (int j = 0; j < y; j++) {
-                    if (arr[i, j] == false) { ans = false; }
+        public bool[,] isValidRec(bool[,] AbleToPass, int x, int y) 
+        {
+            
+            if (!LockedLeft[x, y] && y > 0) { 
+                if (!AbleToPass[x, y - 1]) { 
+                    AbleToPass[x, y - 1] = true; 
+                    AbleToPass = isValidRec(AbleToPass, x, y - 1); 
+                } 
+            }
+            if (!LockedRight[x, y] && y < width - 1) { 
+                if (!AbleToPass[x, y + 1]) { 
+                    AbleToPass[x, y + 1] = true; 
+                    AbleToPass = isValidRec(AbleToPass, x, y + 1); 
+                } 
+            }
+            if (!LockedUp[x, y] && x > 0) { 
+                if (!AbleToPass[x - 1, y]) { 
+                    AbleToPass[x - 1, y] = true; 
+                    AbleToPass = isValidRec(AbleToPass, x - 1, y); 
                 }
             }
-
-            return ans;
+            if (!LockedDown[x, y] && x < height - 1) { 
+                if (!AbleToPass[x + 1, y]) { 
+                    AbleToPass[x + 1, y] = true; 
+                    AbleToPass = isValidRec(AbleToPass, x + 1, y); 
+                } 
+            }
+            
+            return AbleToPass;
         }
     }
 }
