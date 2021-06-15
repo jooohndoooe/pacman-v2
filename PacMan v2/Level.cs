@@ -10,83 +10,41 @@ namespace PacMan_v2
     {
         public int sizeX { get; set; }
         public int sizeY { get; set; }
-        public int NumberOfEnemies { get; set; }
+        public int EnemyCount { get; set; }
         public Enemy[] enemies { set; get; }
-        public int NumberOfUpgrades { set; get; }
+        public int UpgradeCount { set; get; }
         public Point[,] field { set; get; }
         public int difficulty { set; get; }
 
-        public Level(int sizeX,int sizeY, int NumberOfEnemies, int NumberOfUpgrades, Point[,] points, int difficulty)
-        {
-            SetBase(sizeX, sizeY, NumberOfEnemies, NumberOfUpgrades, difficulty);
-            Random r = new Random();
-            for (int i = 0; i < NumberOfEnemies; i++)
-            {
-                int x = r.Next() % (this.sizeX - 2); x++;
-                int z = 0;
-                int[] arr = new int[this.sizeY];
-                z = -1;
-                for (int j = 0; j < this.sizeY; j++) { if (points[x, j].lvl == 0) { z++; arr[z] = j; } }
-                z++;
-                if (z == 0) { i--; continue; }
-                int y = r.Next() % z;
-                y = arr[y];
+        public static event EventHandler<DrawEventArgs> OnDraw;
 
-                SetEnemy(x, y, NumberOfUpgrades, i, difficulty);
-            }
+        public Level(int sizeX,int sizeY, int EnemyCount, int UpgradeCount, Point[,] points, int difficulty)
+        {
+            SetBaseRandom(sizeX, sizeY, EnemyCount, UpgradeCount, ToBool(sizeX, sizeY, points), difficulty);
 
             this.field = points;
         }
 
-        public Level(int sizeX, int sizeY, int NumberOfEnemies, int NumberOfUpgrades, char[,] points, int difficulty)
+        public Level(int sizeX, int sizeY, int EnemyCount, int UpgradeCount, char[,] points, int difficulty)
         {
-            SetBase(sizeX, sizeY, NumberOfEnemies, NumberOfUpgrades, difficulty);
-            Random r = new Random();
-            for (int i = 0; i < NumberOfEnemies; i++)
-            {
-                int x = r.Next() % (this.sizeX-2); x++;
-                int z = 0;
-                int[] arr = new int[this.sizeY];
-                z = -1;
-                for (int j = 0; j < this.sizeY; j++) { if (points[x, j] == ' ') { z++; arr[z] = j; } }
-                z++;
-                if (z == 0) { i--; continue; }
-                int y = r.Next() % z;
-                y = arr[y];
-
-                SetEnemy(x, y, NumberOfUpgrades, i, difficulty);
-            }
+            SetBaseRandom(sizeX, sizeY, EnemyCount, UpgradeCount, ToBool(sizeX, sizeY, points), difficulty);
 
             SetField(sizeX, sizeY, points);
         }
 
-        public Level(int sizeX, int sizeY, int NumberOfEnemies, int[,] EnemyPlacementArray, int NumberOfUpgrades, Point[,] points, int difficulty)
+        public Level(int sizeX, int sizeY, int EnemyCount, int[,] EnemyPlacementArray, int UpgradeCount, Point[,] points, int difficulty)
         {
-            SetBase(sizeX, sizeY, NumberOfEnemies, NumberOfUpgrades, difficulty);
-            Random r = new Random();
-            for (int i = 0; i < this.NumberOfEnemies; i++)
-            {
-                int x = EnemyPlacementArray[i, 0];
-                int y = EnemyPlacementArray[i, 1];
-                SetEnemy(x, y, this.NumberOfUpgrades, i, this.difficulty);
-            }
+            SetBaseFixed(sizeX, sizeY, EnemyCount, EnemyPlacementArray, UpgradeCount, difficulty);
 
             this.field = points;      
         }
 
 
-        public Level(int sizeX, int sizeY, int NumberOfEnemies, int[,] EnemyPlacementArray, int NumberOfUpgrades, char[,] points, int difficulty)
+        public Level(int sizeX, int sizeY, int EnemyCount, int[,] EnemyPlacementArray, int UpgradeCount, char[,] points, int difficulty)
         {
-            SetBase(sizeX, sizeY, NumberOfEnemies, NumberOfUpgrades, difficulty);
-            Random r = new Random();
-            for (int i = 0; i < this.NumberOfEnemies; i++)
-            {
-                int x = EnemyPlacementArray[i, 0];
-                int y = EnemyPlacementArray[i, 1];
-                SetEnemy(x, y, this.NumberOfUpgrades, i, this.difficulty);
-            }
+            SetBaseFixed(sizeX, sizeY, EnemyCount, EnemyPlacementArray, UpgradeCount, difficulty);
 
-            SetField(this.sizeX, this.sizeY, points);
+            SetField(sizeX, sizeY, points);
         }
 
         public void Load()
@@ -95,24 +53,73 @@ namespace PacMan_v2
             {
                 for (int j = 0; j < sizeY; j++)
                 {
-                    field[i, j].Draw();
+                    OnDraw?.Invoke(this, new DrawEventArgs(i,j,field[i,j].ch) );
+                    //field[i, j].Draw();
                 }
             }
         }
 
-        public char GetChar(int a, int b) 
+        public bool[,] ToBool(int sizeX, int sizeY, char[,] points)
         {
-            return field[a, b].ch;
+            bool[,] pointsBool = new bool[sizeX, sizeY];
+            for (int i = 0; i < sizeX; i++)
+            {
+                for (int j = 0; j < sizeY; j++)
+                {
+                    pointsBool[i, j] = false;
+                    if (points[i, j] == ' ') { pointsBool[i, j] = true; }
+                }
+            }
+            return pointsBool;
         }
 
-        public int GetLvl(int a, int b) 
+        public bool[,] ToBool(int sizeX, int sizeY, Point[,] points)
         {
-            return field[a, b].lvl;
+            bool[,] pointsBool = new bool[sizeX, sizeY];
+            for (int i = 0; i < sizeX; i++)
+            {
+                for (int j = 0; j < sizeY; j++)
+                {
+                    pointsBool[i, j] = false;
+                    if (points[i, j].lvl == 0) { pointsBool[i, j] = true; }
+                }
+            }
+            return pointsBool;
         }
 
-        public void SetEnemy(int x, int y, int NumberOfUpgrades, int i, int difficulty) 
+        public void SetBaseRandom(int sizeX, int sizeY, int EnemyCount, int UpgradeCount, bool[,] points, int difficulty) 
         {
-            int temp = NumberOfUpgrades - i;
+            SetBaseValues(sizeX, sizeY, EnemyCount, UpgradeCount, difficulty);
+            Random r = new Random();
+            for (int i = 0; i < EnemyCount; i++)
+            {
+                int x = r.Next() % (this.sizeX - 2); x++;
+                int z = 0;
+                int[] arr = new int[this.sizeY];
+                z = -1;
+                for (int j = 0; j < this.sizeY; j++) { if (points[x, j]) { z++; arr[z] = j; } }
+                z++;
+                if (z == 0) { i--; continue; }
+                int y = r.Next() % z;
+                y = arr[y];
+
+                SetEnemy(x, y, UpgradeCount, i, difficulty);
+            }
+        }
+
+        public void SetBaseFixed(int sizeX, int sizeY, int EnemyCount, int[,] EnemyPlacementArray, int UpgradeCount, int difficulty) 
+        {
+            SetBaseValues(sizeX, sizeY, EnemyCount, UpgradeCount, difficulty);
+            Random r = new Random();
+            for (int i = 0; i < this.EnemyCount; i++)
+            {
+                SetEnemy(EnemyPlacementArray[i, 0], EnemyPlacementArray[i, 1], this.UpgradeCount, i, this.difficulty);
+            }
+        }
+
+        public void SetEnemy(int x, int y, int UpgradeCount, int i, int difficulty) 
+        {
+            int temp = UpgradeCount - i;
             Random r = new Random();
             if (difficulty == 1)
             {
@@ -135,7 +142,7 @@ namespace PacMan_v2
 
             if (difficulty == 5)
             {
-                if (i == 0) { this.enemies[i] = new Enemy(x, y, (char)(temp + 48), temp, 'p'); if (temp >= 2) { temp--; } }
+                if (i == 0) { this.enemies[i] = new Enemy(x, y, (char)(temp + 48), temp, 'f'); if (temp >= 2) { temp--; } }
                 if (i == 1) { this.enemies[i] = new Enemy(x, y, (char)(temp + 48), temp, 'i'); if (temp >= 2) { temp--; } }
                 if (i >= 2)
                 {
@@ -146,14 +153,14 @@ namespace PacMan_v2
             }
         }
 
-        public void SetBase(int sizeX, int sizeY, int NumberOfEnemies, int NumberOfUpgrades, int difficulty) 
+        public void SetBaseValues(int sizeX, int sizeY, int EnemyCount, int UpgradeCount, int difficulty) 
         {
-            enemies = new Enemy[NumberOfEnemies];
+            enemies = new Enemy[EnemyCount];
             field = new Point[sizeX, sizeY];
             this.sizeX = sizeX;
             this.sizeY = sizeY;
-            this.NumberOfEnemies = NumberOfEnemies;
-            this.NumberOfUpgrades = NumberOfUpgrades;
+            this.EnemyCount = EnemyCount;
+            this.UpgradeCount = UpgradeCount;
             this.difficulty = difficulty;
         }
 
@@ -172,7 +179,7 @@ namespace PacMan_v2
 
         public Level(Level L, DotField D, UpgradeField U, Player P1, Player P2, Point P) 
         {
-            SetBase(L.sizeX, L.sizeY, L.NumberOfEnemies, L.NumberOfUpgrades, L.difficulty);
+            SetBaseValues(L.sizeX, L.sizeY, L.EnemyCount, L.UpgradeCount, L.difficulty);
             for (int i = 0; i < L.sizeX; i++) {
                 for (int j = 0; j < L.sizeY; j++) {
                     this.field[i, j] = L.field[i, j];
@@ -190,7 +197,7 @@ namespace PacMan_v2
             }
 
 
-            for (int i = 0; i < L.NumberOfEnemies; i++) 
+            for (int i = 0; i < L.EnemyCount; i++) 
             {
                 if (L.enemies[i].x != 0 || L.enemies[i].y != 0)
                 {
@@ -209,7 +216,7 @@ namespace PacMan_v2
         }
         public Level(Level L,Player P1)
         {
-            SetBase(L.sizeX, L.sizeY, L.NumberOfEnemies, L.NumberOfUpgrades, L.difficulty);
+            SetBaseValues(L.sizeX, L.sizeY, L.EnemyCount, L.UpgradeCount, L.difficulty);
             for (int i = 0; i < L.sizeX; i++)
             {
                 for (int j = 0; j < L.sizeY; j++)
@@ -218,6 +225,24 @@ namespace PacMan_v2
                 }
             }
             this.field[P1.x, P1.y] = new Point(P1.x, P1.y, P1.ch);
+        }
+
+
+        public void SetFinishOutLine(Point finish) 
+        {
+            if (finish == null) { return; }
+            SetBarrier(finish.x + 1, finish.y, 1);
+            SetBarrier(finish.x - 1, finish.y, 1);
+            SetBarrier(finish.x, finish.y + 1, 1);
+            SetBarrier(finish.x, finish.y - 1, 1);
+        }
+
+        public void SetBarrier(int x, int y, int lvl) 
+        {
+            if (this.field[x, y].ch == ' ')
+            {
+                this.field[x, y] = new Point(x, y, 'B', lvl);
+            }
         }
     }
 }

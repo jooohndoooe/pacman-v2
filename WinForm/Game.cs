@@ -11,7 +11,7 @@ using System.Windows.Forms;
 //using NAudio.Wave;
 
 namespace WinForm
-{
+{ 
     public partial class Game : UserControl
     {
         public Game()
@@ -28,36 +28,44 @@ namespace WinForm
         public Level InterfaceFieldPrevious { get; set; } 
         public Logic logic { get; set; }
 
+        public Logic logicBackup { get; set; }
+
         public event EventHandler OnMainMenu;
-       
 
 
-        public event EventHandler OnP1killedP2;
-        public event EventHandler OnP2killedP1;
-        public event EventHandler OnP1Score;
-        public event EventHandler OnP2Score;
-        public event EventHandler OnP1Died;
-        public event EventHandler OnP2Died;
-        public event EventHandler OnDraw;
-        public event EventHandler OnVictory;
-        public event EventHandler OnDeath;
-        public event EventHandler OnTime;
-        public event EventHandler OnFinish;
+        public event EventHandler<EndEventArgs> OnEnd;
+
+
 
 
         protected override void OnPaint(PaintEventArgs e)
         {
+            //Level.OnDraw += PointDraw.Draw;
+
             var L = logic.InterfaceField;
             if (L == null) { return; }
             var cellHeight = (Height - 150) / L.sizeY;
             var cellWidth = Width / L.sizeX;
+
+            if (cellHeight > cellWidth) { cellHeight = cellWidth; } else { cellWidth = cellHeight; }
+
             for (int row = 0; row < L.sizeY; row++)
             {
                 for (int col = 0; col < L.sizeX; col++)
                 {
-                    L.field[col,row].DrawWF(e.Graphics, new Rectangle(col * cellWidth, row * cellHeight, cellWidth, cellHeight));
+                    PointDraw.graphics = e.Graphics;
+                    if (L.field[col, row].ch == 'O')
+                    {
+                        PointDraw.Draw(null, new DrawEventArgs(L.field[col, row].ch, new Rectangle(col * cellWidth, row * cellHeight, cellWidth, cellHeight), logic.P1.direction));
+                    }
+                    else
+                    {
+                        PointDraw.Draw(null, new DrawEventArgs(L.field[col, row].ch, new Rectangle(col * cellWidth, row * cellHeight, cellWidth, cellHeight), ' '));
+                    }
+                    //L.field[col, row].DrawWF();
                 }
             }
+            L.Load();
             InterfaceFieldPrevious = logic.InterfaceField;
 
         }
@@ -88,12 +96,45 @@ namespace WinForm
             if (e.KeyData == Keys.G) { logic.G.Turn(); }
             if (e.KeyData == Keys.I) { logic.G.Invert(); }
 
+
             if (mode == "SinglePlayer")
             {
                 if (e.KeyData == Keys.Down || e.KeyData == Keys.S) { logic.P1.ChangeDirection('d'); }
                 if (e.KeyData == Keys.Up || e.KeyData == Keys.W) { logic.P1.ChangeDirection('u'); }
                 if (e.KeyData == Keys.Left || e.KeyData == Keys.A) { logic.P1.ChangeDirection('l'); }
                 if (e.KeyData == Keys.Right || e.KeyData == Keys.D) { logic.P1.ChangeDirection('r'); }
+                if (e.KeyData == Keys.H) 
+                {
+                    if (Hint.Visible == false)
+                    {
+                        Hint.Visible = true;
+                        HintValue.Visible = true;
+                    }
+                    else
+                    {
+                        Hint.Visible = false;
+                        HintValue.Visible = false;
+                    }
+                }
+                if (e.KeyData == Keys.E) 
+                {
+                    if (!logic.emulation)
+                    {
+                        logic.emulation = true;
+                        logicBackup = logic;
+                    }
+                    else
+                    {
+                        //GameField G = new GameField();
+
+                        logic = logicBackup;
+                        logic.emulation = false;
+                        level = logic.level;
+                        difficulty = logic.difficulty;
+                        mode = logic.mode;
+                        InterfaceFieldPrevious = logic.InterfaceField;
+                    }
+                }
                 if (logic.LevelEditorMode)
                 {
                     if (e.KeyData == Keys.Space)
@@ -120,6 +161,7 @@ namespace WinForm
                         char[,] backupCustomLevel=logic.CustomLevel;
                         logic = new Logic(3, logic.difficulty, logic.mode, logic.MusicStatus, true);
                         logic.L= new Level(10, 10, 1, 1, backupCustomLevel, difficulty);
+                        logic.L.SetFinishOutLine(logic.FinishPoint);
                         logic. D = new DotField(logic.L);
                         logic.U = new UpgradeField(logic.L, logic.D);
                         logic.G = new GravityField(logic.L, 1, false);
@@ -171,12 +213,15 @@ namespace WinForm
                 if (result == "P1Died")
                 {
                     GameActiveStatus = false;
-                    OnP1Died?.Invoke(this, EventArgs.Empty);
+                    OnEnd?.Invoke(this, new EndEventArgs("P1 died to a bot!"));
+                    //OnP1Died?.Invoke(this, EventArgs.Empty);
                 }
                 if (result == "P2Died")
                 {
                     GameActiveStatus = false;
-                    OnP2Died?.Invoke(this, EventArgs.Empty);
+                    OnEnd?.Invoke(this, new EndEventArgs("P2 died to a bot!"));
+
+                    //OnP2Died?.Invoke(this, EventArgs.Empty);
                 }
 
 
@@ -191,57 +236,68 @@ namespace WinForm
                 if (result == "P1Died")
                 {
                     GameActiveStatus = false;
-                    OnP1Died?.Invoke(this, EventArgs.Empty);
+                    OnEnd?.Invoke(this, new EndEventArgs("P1 died to a bot!"));
+                    //OnP1Died?.Invoke(this, EventArgs.Empty);
                 }
                 if (result == "P2Died")
                 {
                     GameActiveStatus = false;
-                    OnP2Died?.Invoke(this, EventArgs.Empty);
+                    OnEnd?.Invoke(this, new EndEventArgs("P2 died to a bot!"));
+                    //OnP2Died?.Invoke(this, EventArgs.Empty);
                 }
                 if (result == "P1killedP2")
                 {
                     GameActiveStatus = false;
-                    OnP1killedP2?.Invoke(this, EventArgs.Empty);
+                    OnEnd?.Invoke(this, new EndEventArgs("P1 killed P2"));
+                    //OnP1killedP2?.Invoke(this, EventArgs.Empty);
                 }
                 if (result == "P2killedP1")
                 {
                     GameActiveStatus = false;
-                    OnP2killedP1?.Invoke(this, EventArgs.Empty);
+                    OnEnd?.Invoke(this, new EndEventArgs("P2 killed P1"));
+                    //OnP2killedP1?.Invoke(this, EventArgs.Empty);
                 }
                 if (result == "P1Score")
                 {
                     GameActiveStatus = false;
-                    OnP1Score?.Invoke(this, EventArgs.Empty);
+                    OnEnd?.Invoke(this, new EndEventArgs("P1 Won!"));
+                    //OnP1Score?.Invoke(this, EventArgs.Empty);
                 }
                 if (result == "P2Score")
                 {
                     GameActiveStatus = false;
-                    OnP2Score?.Invoke(this, EventArgs.Empty);
+                    OnEnd?.Invoke(this, new EndEventArgs("P2 Won!"));
+                    //OnP2Score?.Invoke(this, EventArgs.Empty);
                 }
                 if (result == "Death")
                 {
                     GameActiveStatus = false;
-                    OnDeath?.Invoke(this, EventArgs.Empty);
+                    OnEnd?.Invoke(this, new EndEventArgs("You Died!"));
+                    //OnDeath?.Invoke(this, EventArgs.Empty);
                 }
                 if (result == "Victory")
                 {
                     GameActiveStatus = false;
-                    OnVictory?.Invoke(this, EventArgs.Empty);
+                    OnEnd?.Invoke(this, new EndEventArgs("You Won!"));
+                    //OnVictory?.Invoke(this, EventArgs.Empty);
                 }
                 if (result == "Time")
                 {
                     GameActiveStatus = false;
-                    OnTime?.Invoke(this, EventArgs.Empty);
+                    OnEnd?.Invoke(this, new EndEventArgs("Time has ended"));
+                    ///OnTime?.Invoke(this, EventArgs.Empty);
                 }
                 if (result == "Finish")
                 {
                     GameActiveStatus = false;
-                    OnFinish?.Invoke(this, EventArgs.Empty);
+                    OnEnd?.Invoke(this, new EndEventArgs("You have reached the finish line"));
+                    //OnFinish?.Invoke(this, EventArgs.Empty);
                 }
                 if (result == "Draw")
                 {
                     GameActiveStatus = false;
-                    OnDraw?.Invoke(this, EventArgs.Empty);
+                    OnEnd?.Invoke(this, new EndEventArgs("Draw!"));
+                    //OnDraw?.Invoke(this, EventArgs.Empty);
                 }
 
                 if (mode == "SinglePlayer")
@@ -271,6 +327,23 @@ namespace WinForm
                     P2LivesAmount.Visible = true;
                 }
 
+                string hint="";
+                char hintCh;
+                if (logic.P1.CanPass(logic.FinishPoint.x, logic.FinishPoint.y, logic.L))
+                {
+                    hintCh = logic.P1.FindPathAvoidingEnemies(logic.FinishPoint.x, logic.FinishPoint.y, logic.L, 0);
+                }
+                else
+                {
+                    hintCh = logic.P1.FindPathAvoidingEnemies(logic.P1.ClosestUpgradeX(logic.L, logic.U), logic.P1.ClosestUpgradeY(logic.L, logic.U), logic.L, 0);
+                }
+
+                if (hintCh == 'r') { hint = "Right"; }
+                if (hintCh == 'l') { hint = "Left"; }
+                if (hintCh == 'u') { hint = "Up"; }
+                if (hintCh == 'd') { hint = "Down"; }
+
+                HintValue.Text = $"{hint}";
                 P1ScoreAmount.Text = $"{logic.P1.score}";
                 P2ScoreAmount.Text = $"{logic.P2.score}";
                 P1xAmount.Text = $"{logic.P1.x}";
@@ -296,6 +369,24 @@ namespace WinForm
         private void label1_Click_1(object sender, EventArgs e)
         {
 
+        }
+
+        private void pictureBox1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Hint_Click(object sender, EventArgs e)
+        {
+
+        }
+    }
+    public class EndEventArgs : EventArgs
+    {
+        public string messadge { get; set; }
+        public EndEventArgs(string messadge)
+        {
+            this.messadge = messadge;
         }
     }
 }

@@ -16,36 +16,30 @@ namespace PacMan_v2
         
         public Entity(int x,int y,char ch, char direction, int lvl)
         {
-            this.x = x;
-            this.y = y;
-            this.ch = ch;
-            this.direction = direction;
-            this.lvl = lvl;
+            SetBase(x, y, ch, direction, lvl);
         }
         public Entity(int x,int y,char ch,char direction)
         {
+            SetBase(x, y, ch, direction, 0);
+        }
+        public Entity(int x, int y, char ch)
+        {
+            SetBase(x, y, ch, 'r', 0);
+        }
+        public Entity(int x, int y, char ch, int lvl)
+        {
+            SetBase(x, y, ch, 'r', lvl);
+        }
+
+        public void SetBase(int x, int y, char ch, char direction, int lvl) 
+        {
             this.x = x;
             this.y = y;
             this.ch = ch;
             this.direction = direction;
-            this.lvl = 0;
-        }
-        public Entity(int x, int y, char ch)
-        {
-            this.x = x;
-            this.y = y;
-            this.ch = ch;
-            this.direction = 'r';
-            this.lvl = 0;
-        }
-        public Entity(int x, int y, char ch, int lvl)
-        {
-            this.x = x;
-            this.y = y;
-            this.ch = ch;
-            this.direction = 'r';
             this.lvl = lvl;
         }
+
         public void ChangeDirection(char direction) 
         {
             if (direction == 'r' || direction == 'l' || direction == 'd' || direction == 'u') 
@@ -62,7 +56,6 @@ namespace PacMan_v2
                 if (direction == 'l') { GoInDirection(-1, 0, L, D, U); }
                 if (direction == 'u') { GoInDirection(0, -1, L, D, U); }
                 if (direction == 'd') { GoInDirection(0, 1, L, D, U); }
-                //Load();
             }
         }
 
@@ -70,12 +63,10 @@ namespace PacMan_v2
         {
             if (this.ch != ' ')
             {
-                //Clear();
                 if (direction == 'r') { GoInDirection(1, 0, L); }
                 if (direction == 'l') { GoInDirection(-1, 0, L); }
                 if (direction == 'u') { GoInDirection(0, -1, L); }
                 if (direction == 'd') { GoInDirection(0, 1, L); }
-                //Load();
             }
         }
 
@@ -83,7 +74,6 @@ namespace PacMan_v2
         {
             if (L.field[(x + deltaX + L.sizeX) % L.sizeX, (y + deltaY + L.sizeY) % L.sizeY].lvl < lvl)
             {
-                //if (U.field[x, y].status == true) { U.field[x, y].Draw(); } else { D.field[x, y].Draw(); }
                 this.x += deltaX + L.sizeX;
                 this.x %= L.sizeX;
                 this.y += deltaY + L.sizeY;
@@ -106,7 +96,6 @@ namespace PacMan_v2
         {
             if (L.field[(x + deltaX) % L.sizeX, (y + deltaY) % L.sizeY].lvl < lvl)
             {
-                //if (U.field[x, y].status == true) { U.field[x, y].Draw(); } else { D.field[x, y].Draw(); }
                 this.x += deltaX + L.sizeX;
                 this.x %= L.sizeX;
                 this.y += deltaY + L.sizeY;
@@ -125,7 +114,6 @@ namespace PacMan_v2
         {
             if (L.field[(x + deltaX) % L.sizeX, (y + deltaY) % L.sizeY].lvl < lvl)
             {
-                //if (U.field[x, y].status == true) { U.field[x, y].Draw(); } else { D.field[x, y].Draw(); }
                 this.x += deltaX + L.sizeX;
                 this.x %= L.sizeX;
                 this.y += deltaY + L.sizeY;
@@ -202,5 +190,236 @@ namespace PacMan_v2
             System.Console.SetCursorPosition(x, y);
             System.Console.Write(' ');
         }
+
+        public void GoToDestination(int destinationX, int destinationY, Level L, DotField D, UpgradeField U)
+        {
+            if (FindPath(destinationX, destinationY, L) == 'r') { GoInDirection(1, 0, L, D, U); }
+            if (FindPath(destinationX, destinationY, L) == 'l') { GoInDirection(-1, 0, L, D, U); }
+            if (FindPath(destinationX, destinationY, L) == 'u') { GoInDirection(0, -1, L, D, U); }
+            if (FindPath(destinationX, destinationY, L) == 'd') { GoInDirection(0, 1, L, D, U); }
+        }
+
+        public char FindPath(int destinationX, int destinationY, Level L)
+        {
+            int[,] distanceArray = new int[L.sizeX, L.sizeY];
+            int[,] distanceArrayBackup = new int[L.sizeX, L.sizeY];
+            for (int i = 0; i < L.sizeX; i++)
+            {
+                for (int j = 0; j < L.sizeY; j++)
+                {
+                    distanceArray[i, j] = 0;
+                    distanceArrayBackup[i, j] = 0;
+                }
+            }
+
+            distanceArray[x, y] = 1;
+            distanceArrayBackup[x, y] = 1;
+
+            while (distanceArray[destinationX, destinationY] == 0)
+            {
+                for (int i = 0; i < L.sizeX; i++)
+                {
+                    for (int j = 0; j < L.sizeY; j++)
+                    {
+                        if (L.field[i, j].lvl == 0 && distanceArray[i, j] == 0)
+                        {
+                            int min = 10000;
+                            if (distanceArrayBackup[i + 1, j] != 0 && distanceArrayBackup[i + 1, j] < min && L.field[i + 1, j].lvl < this.lvl) { min = distanceArrayBackup[i + 1, j]; }
+                            if (distanceArrayBackup[i - 1, j] != 0 && distanceArrayBackup[i - 1, j] < min && L.field[i - 1, j].lvl < this.lvl) { min = distanceArrayBackup[i - 1, j]; }
+                            if (distanceArrayBackup[i, j + 1] != 0 && distanceArrayBackup[i, j + 1] < min && L.field[i, j + 1].lvl < this.lvl) { min = distanceArrayBackup[i, j + 1]; }
+                            if (distanceArrayBackup[i, j - 1] != 0 && distanceArrayBackup[i, j - 1] < min && L.field[i, j - 1].lvl < this.lvl) { min = distanceArrayBackup[i, j - 1]; }
+                            min++;
+                            if (min < 10000)
+                            {
+                                distanceArray[i, j] = min;
+                            }
+                        }
+                    }
+                }
+
+                for (int i = 0; i < L.sizeX; i++)
+                {
+                    for (int j = 0; j < L.sizeY; j++)
+                    {
+                        distanceArrayBackup[i, j] = distanceArray[i, j];
+                    }
+                }
+            }
+
+            int distance = distanceArray[destinationX, destinationY];
+
+            int xDirection = destinationX;
+            int yDirection = destinationY;
+            while (distance > 2)
+            {
+                if (distanceArray[xDirection + 1, yDirection] == distance - 1) { xDirection++; }
+                else
+                {
+                    if (distanceArray[xDirection - 1, yDirection] == distance - 1) { xDirection--; }
+                    else
+                    {
+                        if (distanceArray[xDirection, yDirection + 1] == distance - 1) { yDirection++; }
+                        else
+                        {
+                            if (distanceArray[xDirection, yDirection - 1] == distance - 1) { yDirection--; }
+                        }
+                    }
+                }
+                distance--;
+            }
+
+            if (xDirection == x + 1) { return 'r'; }
+            if (xDirection == x - 1) { return 'l'; }
+            if (yDirection == y + 1) { return 'd'; }
+            if (yDirection == y - 1) { return 'u'; }
+            return ' ';
+        }
+        
+        public int distance(int destinationX, int destinationY, Level L)
+        {
+            int[,] distanceArray = new int[L.sizeX, L.sizeY];
+            int[,] distanceArrayBackup = new int[L.sizeX, L.sizeY];
+            for (int i = 0; i < L.sizeX; i++)
+            {
+                for (int j = 0; j < L.sizeY; j++)
+                {
+                    distanceArray[i, j] = 0;
+                    distanceArrayBackup[i, j] = 0;
+                }
+            }
+
+            distanceArray[x, y] = 1;
+            distanceArrayBackup[x, y] = 1;
+
+            while (distanceArray[destinationX, destinationY] == 0)
+            {
+                for (int i = 0; i < L.sizeX; i++)
+                {
+                    for (int j = 0; j < L.sizeY; j++)
+                    {
+                        if (L.field[i, j].lvl == 0 && distanceArray[i, j] == 0)
+                        {
+                            int minDistance = 10000;
+                            if (i < L.sizeX - 1)
+                            {
+                                if (distanceArrayBackup[i + 1, j] != 0 && distanceArrayBackup[i + 1, j] < minDistance && L.field[i + 1, j].lvl < this.lvl) { minDistance = distanceArrayBackup[i + 1, j]; }
+                            }
+                            if (i > 0)
+                            {
+                                if (distanceArrayBackup[i - 1, j] != 0 && distanceArrayBackup[i - 1, j] < minDistance && L.field[i - 1, j].lvl < this.lvl) { minDistance = distanceArrayBackup[i - 1, j]; }
+                            }
+                            if (j < L.sizeY - 1)
+                            {
+                                if (distanceArrayBackup[i, j + 1] != 0 && distanceArrayBackup[i, j + 1] < minDistance && L.field[i, j + 1].lvl < this.lvl) { minDistance = distanceArrayBackup[i, j + 1]; }
+                            }
+                            if (j > 0)
+                            {
+                                if (distanceArrayBackup[i, j - 1] != 0 && distanceArrayBackup[i, j - 1] < minDistance && L.field[i, j - 1].lvl < this.lvl) { minDistance = distanceArrayBackup[i, j - 1]; }
+                            }
+                            minDistance++;
+                            if (minDistance < 10000)
+                            {
+                                distanceArray[i, j] = minDistance;
+                            }
+                        }
+                    }
+                }
+
+                for (int i = 0; i < L.sizeX; i++)
+                {
+                    for (int j = 0; j < L.sizeY; j++)
+                    {
+                        distanceArrayBackup[i, j] = distanceArray[i, j];
+                    }
+                }
+            }
+
+            return distanceArray[destinationX, destinationY];
+        }
+
+        public bool CanPass(int x, int y, Level L) 
+        {
+            bool[,] visited = new bool[L.sizeX, L.sizeY];
+            bool[,] AbleToPass = new bool[L.sizeX, L.sizeY];
+
+            for (int i = 0; i < L.sizeX; i++) 
+            {
+                for (int j = 0; j < L.sizeY; j++) 
+                {
+                    visited[i, j] = false;
+                    AbleToPass[i, j] = false;
+                }
+            }
+
+            CanPass_rec(x, y, L, visited, AbleToPass, this.x, this.y);
+
+            return AbleToPass[x, y];
+        }
+
+        public void CanPass_rec(int x, int y, Level L, bool[,] visited, bool[,] AbleToPass, int CurrentX, int CurrentY) 
+        {
+            List<int> DeltaPass = new List<int>();
+
+            if (CurrentX < L.sizeX)
+            {
+                if (!visited[CurrentX + 1, CurrentY])
+                {
+                    visited[CurrentX + 1, CurrentY] = true;
+                    if (L.field[CurrentX + 1, CurrentY].lvl < this.lvl) 
+                    { 
+                        AbleToPass[CurrentX + 1, CurrentY] = true;
+                        DeltaPass.Add(1);
+                        DeltaPass.Add(0);
+                    }
+                }
+            }
+            if (CurrentX > 0)
+            {
+                if (!visited[CurrentX - 1, CurrentY])
+                {
+                    visited[CurrentX - 1, CurrentY] = true;
+                    if (L.field[CurrentX - 1, CurrentY].lvl < this.lvl) 
+                    { 
+                        AbleToPass[CurrentX - 1, CurrentY] = true;
+                        DeltaPass.Add(-1);
+                        DeltaPass.Add(0);
+                    }
+                }
+            }
+            if (CurrentY < L.sizeY)
+            {
+                if (!visited[CurrentX, CurrentY + 1])
+                {
+                    visited[CurrentX , CurrentY + 1] = true;
+                    if (L.field[CurrentX, CurrentY + 1].lvl < this.lvl) 
+                    { 
+                        AbleToPass[CurrentX, CurrentY + 1] = true;
+                        DeltaPass.Add(0);
+                        DeltaPass.Add(1);
+                    }
+                }
+            }
+            if (CurrentY > 0)
+            {
+                if (!visited[CurrentX, CurrentY - 1])
+                {
+                    visited[CurrentX, CurrentY - 1] = true;
+                    if (L.field[CurrentX, CurrentY - 1].lvl < this.lvl) 
+                    { 
+                        AbleToPass[CurrentX, CurrentY - 1] = true;
+                        DeltaPass.Add(0);
+                        DeltaPass.Add(-1);
+                    }
+                }
+            }
+
+            if (visited[x, y]) { return; }
+
+            for (int i = 0; i < DeltaPass.Count / 2; i++) 
+            {
+                CanPass_rec(x, y, L, visited, AbleToPass, CurrentX + DeltaPass[2 * i], CurrentY + DeltaPass[2 * i + 1]);
+            }
+        }
+
     }
 }

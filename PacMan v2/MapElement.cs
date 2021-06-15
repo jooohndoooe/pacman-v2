@@ -35,13 +35,7 @@ namespace PacMan_v2
 
             if (LockedRight == false)
             {
-                RandomSwitch = r.Next() % 2;
-                this.element[4, 2] = ' ';
-                if (RandomSwitch == 0)
-                {
-                    this.element[4, 1] = ' ';
-                    this.element[4, 3] = ' ';
-                }
+                SetSpace(false, 4);
             }
             else 
             {
@@ -50,13 +44,7 @@ namespace PacMan_v2
 
             if (LockedDown== false)
             {
-                RandomSwitch = r.Next() % 2;
-                this.element[2, 0] = ' ';
-                if (RandomSwitch == 0)
-                {
-                    this.element[1, 0] = ' ';
-                    this.element[3, 0] = ' ';
-                }
+                SetSpace(true, 0);
             }
             else
             {
@@ -65,13 +53,7 @@ namespace PacMan_v2
 
             if (LockedLeft == false)
             {
-                RandomSwitch = r.Next() % 2;
-                this.element[0, 2] = ' ';
-                if (RandomSwitch == 0)
-                {
-                    this.element[0, 1] = ' ';
-                    this.element[0, 3] = ' ';
-                }
+                SetSpace(false, 0);
             }
             else
             {
@@ -80,13 +62,7 @@ namespace PacMan_v2
 
             if (LockedUp == false)
             {
-                RandomSwitch = r.Next() % 2;
-                this.element[2, 4] = ' ';
-                if (RandomSwitch == 0)
-                {
-                    this.element[1, 4] = ' ';
-                    this.element[3, 4] = ' ';
-                }
+                SetSpace(true, 4);
             }
             else
             {
@@ -125,6 +101,30 @@ namespace PacMan_v2
             if (RandomSwitch == 0)
             {
                 this.element[2, 2] = '#';
+            }
+        }
+
+        public void SetSpace(bool side, int value)  
+        {
+            Random r = new Random();
+            int RandomSwitch = r.Next() % 2;
+            if (side)
+            {
+                this.element[2, value] = ' ';
+                if (RandomSwitch == 0)
+                {
+                    this.element[1, value] = ' ';
+                    this.element[3, value] = ' ';
+                }
+            }
+            else
+            {
+                this.element[value, 2] = ' ';
+                if (RandomSwitch == 0)
+                {
+                    this.element[value, 1] = ' ';
+                    this.element[value, 3] = ' ';
+                }
             }
         }
 

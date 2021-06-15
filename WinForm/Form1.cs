@@ -39,7 +39,7 @@ namespace WinForm
 
             
 
-
+            
             game1.logic = logic;
             game1.level = logic.level;
             game1.difficulty = logic.difficulty;
@@ -49,70 +49,8 @@ namespace WinForm
             game1.GameActiveStatus = true;
         }
 
-        private void defeat1_OnBack(object sender, EventArgs e)
-        {
-            defeat1.Visible = false;
-            mainMenu1.Visible = true;
-        }
 
-        private void draw1_OnBack(object sender, EventArgs e)
-        {
-            draw1.Visible = false;
-            mainMenu1.Visible = true;
-        }
-        private void finish1_OnBack(object sender, EventArgs e)
-        {
-            finish1.Visible = false;
-            mainMenu1.Visible = true;
-        }
-
-        private void p1Died1_OnBack(object sender, EventArgs e)
-        {
-            p1Died1.Visible = false;
-            mainMenu1.Visible = true;
-        }
-
-        private void p1killedP21_OnBack(object sender, EventArgs e)
-        {
-            p1killedP21.Visible = false;
-            mainMenu1.Visible = true;
-        }
-
-        private void p1Score1_OnBack(object sender, EventArgs e)
-        {
-            p1Score1.Visible = false;
-            mainMenu1.Visible = true;
-        }
-
-        private void p2Died1_OnBack(object sender, EventArgs e)
-        {
-            p2Died1.Visible = false;
-            mainMenu1.Visible = true;
-        }
-
-        private void p2killedP11_OnBack(object sender, EventArgs e)
-        {
-            p2killedP11.Visible = false;
-            mainMenu1.Visible = true;
-        }
-
-        private void p2Score1_OnBack(object sender, EventArgs e)
-        {
-            p2Score1.Visible = false;
-            mainMenu1.Visible = true;
-        }
-
-        private void settings1_OnBack(object sender, EventArgs e)
-        {
-            settings1.Visible = false;
-            mainMenu1.Visible = true;
-        }
-
-        private void time1_OnBack(object sender, EventArgs e)
-        {
-            time1.Visible = false;
-            mainMenu1.Visible = true;
-        }
+        
 
         private void victory1_OnBack(object sender, EventArgs e)
         {
@@ -128,70 +66,19 @@ namespace WinForm
             mainMenu1.Visible = true;
         }
 
-        private void game1_OnDeath(object sender, EventArgs e)
-        {
-            game1.Visible = false;
-            defeat1.Visible = true;
-        }
+        
 
-        private void game1_OnDraw(object sender, EventArgs e)
-        {
-            game1.Visible = false;
-            draw1.Visible = true;
-        }
-
-        private void game1_OnFinish(object sender, EventArgs e)
-        {
-            game1.Visible = false;
-            finish1.Visible = true;
-        }
-
-        private void game1_OnP1Died(object sender, EventArgs e)
-        {
-            game1.Visible = false;
-            p1Died1.Visible = true;
-        }
-
-        private void game1_OnP1killedP2(object sender, EventArgs e)
-        {
-            game1.Visible = false;
-            p1killedP21.Visible = true;
-        }
-
-        private void game1_OnP1Score(object sender, EventArgs e)
-        {
-            game1.Visible = false;
-            p1Score1.Visible = true;
-        }
-
-        private void game1_OnP2Died(object sender, EventArgs e)
-        {
-            game1.Visible = false;
-            p2Died1.Visible = true;
-        }
-
-        private void game1_OnP2killedP1(object sender, EventArgs e)
-        {
-            game1.Visible = false;
-            p2killedP11.Visible = true;
-        }
-
-        private void game1_OnP2Score(object sender, EventArgs e)
-        {
-            game1.Visible = false;
-            p2Score1.Visible = true;
-        }
-
-        private void game1_OnTime(object sender, EventArgs e)
-        {
-            game1.Visible = false;
-            time1.Visible = true;
-        }
-
-        private void game1_OnVictory(object sender, EventArgs e)
+        private void game1_OnEnd(object sender, EndEventArgs e)
         {
             game1.Visible = false;
             victory1.Visible = true;
+            victory1.result = e.messadge;
+        }
+
+        private void settings1_OnBack(object sender, EventArgs e)
+        {
+            settings1.Visible = false;
+            mainMenu1.Visible = true;
         }
     }
 }

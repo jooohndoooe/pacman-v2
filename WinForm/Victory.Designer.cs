@@ -29,8 +29,10 @@ namespace WinForm
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.VictoryLabel = new System.Windows.Forms.Label();
             this.Back = new System.Windows.Forms.Button();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 
             // VictoryLabel
@@ -55,6 +57,11 @@ namespace WinForm
             this.Back.UseVisualStyleBackColor = true;
             this.Back.Click += new System.EventHandler(this.Back_Click);
             // 
+            // timer1
+            // 
+            this.timer1.Enabled = true;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
             // Victory
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(15F, 37F);
@@ -74,5 +81,6 @@ namespace WinForm
 
         private System.Windows.Forms.Label VictoryLabel;
         private System.Windows.Forms.Button Back;
+        private System.Windows.Forms.Timer timer1;
     }
 }

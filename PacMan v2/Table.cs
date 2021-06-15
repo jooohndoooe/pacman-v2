@@ -17,8 +17,6 @@ namespace PacMan_v2
 
         public Table(int height, int width)
         {
-            height = 3;
-            width = 5;
             this.height = height;
             this.width = width;
             

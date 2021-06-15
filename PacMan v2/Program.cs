@@ -13,13 +13,13 @@ namespace PacMan_v2
 {
     class Program
     {
-        
         static void Main(string[] args)
         {
 
             GameField GG = new GameField();
+            ConsoleMethods C = new ConsoleMethods();
 
-            GG.MainMenu(1, 1, "SinglePlayer", true);
+            C.MainMenu(1, 1, "SinglePlayer", true);
         }
     }
 }

@@ -71,8 +71,203 @@ namespace PacMan_v2
             int StartingY = this.y;
             int fallDamage = GravityMove(L, D, U, G);
             if (this.y != StartingY) { this.health -= fallDamage; }
-            if (this.health < 1) { this.health=100; this.lives--; }
+            if (this.health < 1) { this.health=100; this.lives--; }            
             Go(L, D, U);
+        }
+
+        public int ClosestUpgradeX(Level L, UpgradeField U)
+        {
+            int minDistance = 1000;
+            int minDistanceX = -1;
+            int minDistanceY = -1;
+
+            for (int i=0; i < L.sizeX; i++) 
+            {
+                for (int j = 0; j < L.sizeY; j++) 
+                {
+                    if (U.field[i, j].status == true && distance(i, j, L) < minDistance) 
+                    {
+                        minDistance = distance(i, j, L);
+                        minDistanceX = i;
+                        minDistanceY = j;
+                    }
+                }
+            }
+
+            return minDistanceX;
+        }
+
+        public int ClosestUpgradeY(Level L, UpgradeField U)
+        {
+            int minDistance = 1000;
+            int minDistanceX = -1;
+            int minDistanceY = -1;
+
+            for (int i = 0; i < L.sizeX; i++)
+            {
+                for (int j = 0; j < L.sizeY; j++)
+                {
+                    if (U.field[i, j].status == true && distance(i, j, L) < minDistance)
+                    {
+                        minDistance = distance(i, j, L);
+                        minDistanceX = i;
+                        minDistanceY = j;
+                    }
+                }
+            }
+
+            return minDistanceY;
+        }
+
+        public int DistanceAvoidingEnemies(int destinationX, int destinationY, Level L, int carefullness)  
+        {
+            int[,] distanceArray = new int[L.sizeX, L.sizeY];
+            int[,] distanceArrayBackup = new int[L.sizeX, L.sizeY];
+            for (int i = 0; i < L.sizeX; i++)
+            {
+                for (int j = 0; j < L.sizeY; j++)
+                {
+                    distanceArray[i, j] = 0;
+                    distanceArrayBackup[i, j] = 0;
+                }
+            }
+
+            distanceArray[x, y] = 1;
+            distanceArrayBackup[x, y] = 1;
+
+            if (EnemyInViscinity(L, carefullness)) { return 10000; }
+
+            while (distanceArray[destinationX, destinationY] == 0)
+            {
+
+                for (int i = 0; i < L.sizeX; i++)
+                {
+                    for (int j = 0; j < L.sizeY; j++)
+                    {
+                        if (L.field[i, j].lvl == 0 && distanceArray[i, j] == 0)
+                        {
+                            int minDistance = 10000;
+                            if (distanceArrayBackup[i + 1, j] != 0 && distanceArrayBackup[i + 1, j] < minDistance && L.field[i + 1, j].lvl < this.lvl) { minDistance = distanceArrayBackup[i + 1, j]; }
+                            if (distanceArrayBackup[i - 1, j] != 0 && distanceArrayBackup[i - 1, j] < minDistance && L.field[i - 1, j].lvl < this.lvl) { minDistance = distanceArrayBackup[i - 1, j]; }
+                            if (distanceArrayBackup[i, j + 1] != 0 && distanceArrayBackup[i, j + 1] < minDistance && L.field[i, j + 1].lvl < this.lvl) { minDistance = distanceArrayBackup[i, j + 1]; }
+                            if (distanceArrayBackup[i, j - 1] != 0 && distanceArrayBackup[i, j - 1] < minDistance && L.field[i, j - 1].lvl < this.lvl) { minDistance = distanceArrayBackup[i, j - 1]; }
+                            minDistance++;
+                            if (minDistance < 10000)
+                            {
+                                distanceArray[i, j] = minDistance;
+                            }
+                        }
+                    }
+                }
+                for (int i = 0; i < L.sizeX; i++)
+                {
+                    for (int j = 0; j < L.sizeY; j++)
+                    {
+                        distanceArrayBackup[i, j] = distanceArray[i, j];
+                    }
+                }
+            }
+
+            return distanceArray[destinationX, destinationY];
+        }
+
+        public bool EnemyInViscinity(Level L, int carefullness) 
+        {
+            //return false;
+            carefullness = 5;
+            for(int i = 0; i < L.EnemyCount; i++) 
+            {
+                if (distance(L.enemies[i].x, L.enemies[i].y, L) < carefullness) { return true; }
+            }
+            return false;
+        }
+
+        public char FindPathAvoidingEnemies(int destinationX, int destinationY, Level L, int carefullness)
+        {
+            if (destinationX == this.x && destinationY == this.y) { return 'r'; }
+            if (destinationX == this.x + 1 && destinationY == this.y) { return 'r'; }
+            if (destinationX == this.x - 1 && destinationY == this.y) { return 'l'; }
+            if (destinationY == this.y - 1 && destinationX == this.x) { return 'u'; }
+            if (destinationY == this.y + 1 && destinationX == this.x) { return 'd'; }
+            int[,] distanceArray = new int[L.sizeX, L.sizeY];
+            int[,] distanceArrayBackup = new int[L.sizeX, L.sizeY];
+            for (int i = 0; i < L.sizeX; i++)
+            {
+                for (int j = 0; j < L.sizeY; j++)
+                {
+                    distanceArray[i, j] = 0;
+                    distanceArrayBackup[i, j] = 0;
+                }
+            }
+
+            distanceArray[x, y] = 1;
+            distanceArrayBackup[x, y] = 1;
+
+            if (EnemyInViscinity(L, carefullness)) { return 'r'; }
+
+            while (distanceArray[destinationX, destinationY] == 0)
+            {
+
+                for (int i = 0; i < L.sizeX; i++)
+                {
+                    for (int j = 0; j < L.sizeY; j++)
+                    {
+                        if (L.field[i, j].lvl == 0 && distanceArray[i, j] == 0)
+                        {
+                            int min = 10000;
+                            if (distanceArrayBackup[i + 1, j] != 0 && distanceArrayBackup[i + 1, j] < min && L.field[i + 1, j].lvl < this.lvl) { min = distanceArrayBackup[i + 1, j]; }
+                            if (distanceArrayBackup[i - 1, j] != 0 && distanceArrayBackup[i - 1, j] < min && L.field[i - 1, j].lvl < this.lvl) { min = distanceArrayBackup[i - 1, j]; }
+                            if (distanceArrayBackup[i, j + 1] != 0 && distanceArrayBackup[i, j + 1] < min && L.field[i, j + 1].lvl < this.lvl) { min = distanceArrayBackup[i, j + 1]; }
+                            if (distanceArrayBackup[i, j - 1] != 0 && distanceArrayBackup[i, j - 1] < min && L.field[i, j - 1].lvl < this.lvl) { min = distanceArrayBackup[i, j - 1]; }
+                            min++;
+                            if (min < 10000)
+                            {
+                                distanceArray[i, j] = min;
+                            }
+                        }
+                    }
+                }
+
+                for (int i = 0; i < L.sizeX; i++)
+                {
+                    for (int j = 0; j < L.sizeY; j++)
+                    {
+                        distanceArrayBackup[i, j] = distanceArray[i, j];
+                    }
+                }
+            }
+
+            int distance = distanceArray[destinationX, destinationY];
+
+            if (distance > 500) { return 'f'; }
+
+            int xDirection = destinationX;
+            int yDirection = destinationY;
+            while (distance > 2)
+            {
+                if (distanceArray[xDirection + 1, yDirection] == distance - 1) { xDirection++; }
+                else
+                {
+                    if (distanceArray[xDirection - 1, yDirection] == distance - 1) { xDirection--; }
+                    else
+                    {
+                        if (distanceArray[xDirection, yDirection + 1] == distance - 1) { yDirection++; }
+                        else
+                        {
+                            if (distanceArray[xDirection, yDirection - 1] == distance - 1) { yDirection--; }
+                        }
+                    }
+                }
+                distance--;
+            }
+
+            if (xDirection == x + 1) { return 'r'; }
+            if (xDirection == x - 1) { return 'l'; }
+            if (yDirection == y + 1) { return 'd'; }
+            if (yDirection == y - 1) { return 'u'; }
+
+            
+            return ' ';
         }
     }
 }

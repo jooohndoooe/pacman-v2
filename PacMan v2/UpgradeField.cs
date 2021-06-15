@@ -15,7 +15,7 @@ namespace PacMan_v2
         public int current { get; set; }
         public UpgradeField(Level L,DotField D)
         {
-            this.max = L.NumberOfUpgrades;
+            this.max = L.UpgradeCount;
             this.current = this.max;
             this.field = new Upgrade[L.sizeX, L.sizeY];
             this.sizeX = L.sizeX;
@@ -41,19 +41,6 @@ namespace PacMan_v2
             }
         }
 
-        public void Load()
-        {
-            for (int i = 0; i < sizeX; i++)
-            {
-                for (int j = 0; j < sizeY; j++)
-                {
-                    if (field[i, j].status == true)
-                    {
-                        field[i, j].Draw();
-                    }
-                }
-            }
-        }
 
         public int Take(int x, int y)
         {

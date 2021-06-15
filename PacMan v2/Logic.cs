@@ -40,6 +40,8 @@ namespace PacMan_v2
         public string result { get; set; }
 
 
+        public bool emulation { get; set; } = false;
+
 
         public Logic(int level, int difficulty, string mode, bool MusicStatus, bool LevelEditorMode) 
         {
@@ -87,17 +89,22 @@ namespace PacMan_v2
                 L = new Level(MET.sizeX, MET.sizeY, difficulty, MET.sizeX / 4, MET.field, difficulty);
             }
 
-            D = new DotField(L);
-            U = new UpgradeField(L, D);
-            G = new GravityField(L, 1, false);
+            
+
 
             
-            
             FinishPoint = new Point(L.sizeX - 2, L.sizeY - 2, 'F');
+
             if (mode == "MultyPlayer") { 
                 FinishPoint = new Point(0, 0, '#');
                 P2 = new Player(L.sizeX - 2, L.sizeY - 2, 2);
             }
+
+            //L.SetFinishOutLine(FinishPoint);
+
+            D = new DotField(L);
+            U = new UpgradeField(L, D);
+            G = new GravityField(L, 1, false);
 
             Start = DateTime.Now;
             TeleportTime1 = DateTime.Now;
@@ -124,17 +131,12 @@ namespace PacMan_v2
             }
             for (int i = 0; i < sizeX; i++) { CustomLevel[i, 0] = '#'; CustomLevel[i, sizeY - 1] = '#'; }
             for (int i = 0; i < sizeY; i++) { CustomLevel[0, i] = '#'; CustomLevel[sizeX - 1, i] = '#'; }
-            //L = new Level(sizeX, sizeY, 0, 0, CustomLevel, 0);
-            //P1 = new Player(1, 1, 1);
-            //P1.lvl = 20;
-            //InterfaceField = new Level(L, P1);
-            //while (LevelEditorMode) { }
-            //return CustomLevel;
+
         }
 
         public string MoveEnemies()
         {
-            for (int i = 0; i < L.NumberOfEnemies; i++)
+            for (int i = 0; i < L.EnemyCount; i++)
             {
                 if (mode == "SinglePlayer")
                 {
@@ -193,6 +195,18 @@ namespace PacMan_v2
 
         public string MovePlayers() 
         {
+            if (emulation) 
+            {
+
+                if (P1.CanPass(FinishPoint.x, FinishPoint.y, L))
+                {
+                    P1.direction = P1.FindPathAvoidingEnemies(FinishPoint.x, FinishPoint.y, L, 0);
+                }
+                else 
+                {
+                    P1.direction = P1.FindPathAvoidingEnemies(P1.ClosestUpgradeX(L, U), P1.ClosestUpgradeY(L, U), L, 0);
+                }
+            }
             P1.GravityGo(L, D, U, G);
             NumberOfSteps1++;
             
@@ -264,8 +278,7 @@ namespace PacMan_v2
 
             if (mode == "SinglePlayer")
             {
-                //LoadInfo1(L, D, P1);
-                for (int i = 0; i < L.NumberOfEnemies; i++)
+                for (int i = 0; i < L.EnemyCount; i++)
                 {
                     if (P1.x == L.enemies[i].x && P1.y == L.enemies[i].y)
                     {
@@ -293,7 +306,7 @@ namespace PacMan_v2
                 if (P1.score > 10 || (DateTime.Now - Start).TotalMilliseconds > 20000)
                 {
                     D.Delete(L.sizeX - 2, L.sizeY - 2);
-                    if (P1.x == L.sizeX - 2 && P1.y == L.sizeY - 2) {
+                    if (P1.x == FinishPoint.x && P1.y == FinishPoint.y) {
                         return "Finish";
                     }
                 }
@@ -301,14 +314,12 @@ namespace PacMan_v2
                 if (time <= 0) {
                     return "Time";
                 }
-                //LoadTime(L, time);
-
             }
             else
             {
                 P2.GravityGo(L, D, U, G);
                 NumberOfSteps2++;
-                for (int i = 0; i < L.NumberOfEnemies; i++)
+                for (int i = 0; i < L.EnemyCount; i++)
                 {
                     if (P1.x == L.enemies[i].x && P1.y == L.enemies[i].y)
                     {
@@ -435,7 +446,6 @@ namespace PacMan_v2
                    
                     return "Draw";
                 }
-                //LoadInfo2(L, D, P1, P2);
 
                 if (time <= 0)
                 {
@@ -465,7 +475,6 @@ namespace PacMan_v2
                     return "Draw";
                 }
 
-                //LoadTime(L, time);
             }
             Level InterfaceField = new Level(L, D, U, P1, P2, FinishPoint);
             return "supra";

@@ -12,6 +12,7 @@ namespace WinForm
 {
     public partial class Victory : UserControl
     {
+        public string result { get; set; }
         public Victory()
         {
             InitializeComponent();
@@ -21,6 +22,11 @@ namespace WinForm
         private void Back_Click(object sender, EventArgs e)
         {
             OnBack?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            VictoryLabel.Text= $"{result}";
         }
     }
 }

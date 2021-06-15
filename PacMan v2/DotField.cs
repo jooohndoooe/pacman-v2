@@ -33,23 +33,9 @@ namespace PacMan_v2
             this.CurrentLeft = this.MaxScore;
         }
 
-        public void Load()  
+        public int Take(int x,int y)
         {
-            for (int i = 0; i < sizeX; i++)
-            {
-                for (int j = 0; j < sizeY; j++)
-                {
-                    if (field[i, j].status == true)
-                    {
-                        field[i, j].Draw();
-                    }
-                }
-            }
-        }
-
-        public int Take(int a,int b)
-        {
-            if (field[a, b].status == true) { field[a, b].Take(); this.CurrentLeft--; return 1; } else { return 0; }
+            if (field[x, y].status == true) { field[x, y].Take(); this.CurrentLeft--; return 1; } else { return 0; }
         }
 
         public void Delete(int a, int b)
