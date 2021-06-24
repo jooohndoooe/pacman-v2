@@ -118,8 +118,8 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="Ghost" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Ghost.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="Wall1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Wall1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Ghost1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Ghost1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -127,16 +127,91 @@
   <data name="PacMan" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\PacMan.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Finish" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Finish.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Ghost" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Ghost.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="2PacManUp" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\2PacManUp.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="2PacManDown" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\2PacManDown.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Upgrade" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Upgrade.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="2PacMan" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\2PacMan.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="PacMan2" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\PacMan2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="PacManDown" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\PacManDown.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="2PacMan2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\2PacMan2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Wall" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Wall.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="PacManUp" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\PacManUp.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="CrackedWall" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\CrackedWall.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="2PacManLeft" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\2PacManLeft.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="PacManLeft" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\PacManLeft.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="PacManUp" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\PacManUp.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="PacManDown" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\PacManDown.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="BigDot" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\BigDot.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="BigDotInAnUpgrade" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\BigDotInAnUpgrade.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="BigDotInAnUpgradeInAWall" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\BigDotInAnUpgradeInAWall.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="BigDotInAWall" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\BigDotInAWall.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="BigDotInHealth" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\BigDotInHealth.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="BigDotInHealthInAWall" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\BigDotInHealthInAWall.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="CrackedWall1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\CrackedWall1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="DotInAnUpgrade" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\DotInAnUpgrade.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="DotInAnUpgradeInAWall" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\DotInAnUpgradeInAWall.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="DotInAWall" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\DotInAWall.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="DotInHealth" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\DotInHealth.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="DotInHealthInAWall" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\DotInHealthInAWall.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Health" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Health.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="HealthInAWall" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\HealthInAWall.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="UpgradeInAWall" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\UpgradeInAWall.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

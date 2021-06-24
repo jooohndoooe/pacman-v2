@@ -31,7 +31,7 @@ namespace PacMan_v2
 
 
             int RandomSwitch = 0;
-            List<string> LockedSides = new List<string>();
+            List<int> LockedSides = new List<int>();
 
             if (LockedRight == false)
             {
@@ -39,7 +39,7 @@ namespace PacMan_v2
             }
             else 
             {
-                LockedSides.Add("Right");
+                LockedSides.Add(2);
             }
 
             if (LockedDown== false)
@@ -48,7 +48,7 @@ namespace PacMan_v2
             }
             else
             {
-                LockedSides.Add("Down");
+                LockedSides.Add(3);
             }
 
             if (LockedLeft == false)
@@ -57,7 +57,7 @@ namespace PacMan_v2
             }
             else
             {
-                LockedSides.Add("Left");
+                LockedSides.Add(4);
             }
 
             if (LockedUp == false)
@@ -66,35 +66,20 @@ namespace PacMan_v2
             }
             else
             {
-                LockedSides.Add("Up");
+                LockedSides.Add(1);
             }
 
 
 
             if (LockedSides.Count != 0)
             {
-                string RandomSide = LockedSides[r.Next() % LockedSides.Count];
+                int RandomSide = LockedSides[r.Next() % LockedSides.Count];
+                int[] technicalLoopArray = { 2, 3, 2, 1, 2 };
 
-                if (RandomSide == "Right")
-                {
-                    this.element[3, 2] = '#';
-                    this.element[2, 2] = '#';
-                }
-                if (RandomSide == "Down")
-                {
-                    this.element[2, 1] = '#';
-                    this.element[2, 2] = '#';
-                }
-                if (RandomSide == "Left")
-                {
-                    this.element[1, 2] = '#';
-                    this.element[2, 2] = '#';
-                }
-                if (RandomSide == "Up")
-                {
-                    this.element[2, 3] = '#';
-                    this.element[2, 2] = '#';
-                }
+                this.element[technicalLoopArray[RandomSide - 1], technicalLoopArray[RandomSide]] = '#';
+
+                this.element[2, 2] = '#';
+
             }
 
             RandomSwitch = r.Next() % 2;
@@ -107,24 +92,29 @@ namespace PacMan_v2
         public void SetSpace(bool side, int value)  
         {
             Random r = new Random();
-            int RandomSwitch = r.Next() % 2;
-            if (side)
+            int a1 = 1, a2 = 2, a3 = 3, b1 = value, b2 = value, b3 = value;
+            int RandomSwitch = r.Next() % 3;
+            if (!side)
             {
-                this.element[2, value] = ' ';
-                if (RandomSwitch == 0)
-                {
-                    this.element[1, value] = ' ';
-                    this.element[3, value] = ' ';
-                }
+                int temp = a1;
+                a1 = b1;
+                b1 = temp;
+                temp = a2;
+                a2 = b2;
+                b2 = temp;
+                temp = a3;
+                a3 = b3;
+                b3 = temp;
             }
-            else
+
+            this.element[a2, b2] = ' ';
+            if (RandomSwitch > 0)
             {
-                this.element[value, 2] = ' ';
-                if (RandomSwitch == 0)
-                {
-                    this.element[value, 1] = ' ';
-                    this.element[value, 3] = ' ';
-                }
+                this.element[a1, b1] = ' ';
+            }
+            if (RandomSwitch < 2) 
+            {
+                this.element[a3, b3] = ' ';
             }
         }
 

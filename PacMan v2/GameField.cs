@@ -263,9 +263,9 @@ namespace PacMan_v2
             {
                 Finish(logic.level, logic.difficulty, logic.mode, logic.MusicStatus);
             }
-            if (result == "Draw")
+            if (result == "Tie")
             {
-                Draw(logic.level, logic.difficulty, logic.mode, logic.MusicStatus, logic.P1, logic.P2);
+                Tie(logic.level, logic.difficulty, logic.mode, logic.MusicStatus, logic.P1, logic.P2);
             }
         }
 
@@ -410,7 +410,7 @@ namespace PacMan_v2
             System.Console.WriteLine("P2 score: " + P2.score);
             EndingLoop(level, difficulty, mode, MusicStatus);
         }
-        public void Draw(int level, int difficulty, string mode, bool MusicStatus, Player P1, Player P2)
+        public void Tie(int level, int difficulty, string mode, bool MusicStatus, Player P1, Player P2)
         {
             System.Console.Clear();
             System.Console.WriteLine("Draw.... seriously?");

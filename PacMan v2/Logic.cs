@@ -101,6 +101,7 @@ namespace PacMan_v2
             }
 
             //L.SetFinishOutLine(FinishPoint);
+            L.RandomCrack(L.sizeX / 2);
 
             D = new DotField(L);
             U = new UpgradeField(L, D);
@@ -145,7 +146,7 @@ namespace PacMan_v2
                     {
                         if (L.enemies[i].lvl < P1.lvl)
                         {
-                            L.enemies[i] = new Enemy(0, 0, '#', 's');
+                            L.enemies[i] = new StationaryEnemy(0, 0, '#', 's');
                         }
                         else
                         {
@@ -163,7 +164,7 @@ namespace PacMan_v2
                     {
                         if (L.enemies[i].lvl < P1.lvl)
                         {
-                            L.enemies[i] = new Enemy(0, 0, '#', 's');
+                            L.enemies[i] = new StationaryEnemy(0, 0, '#', 's');
                         }
                         else
                         {
@@ -177,7 +178,7 @@ namespace PacMan_v2
                     {
                         if (L.enemies[i].lvl < P2.lvl)
                         {
-                            L.enemies[i] = new Enemy(0, 0, '#', 's');
+                            L.enemies[i] = new StationaryEnemy(0, 0, '#', 's');
                         }
                         else
                         {
@@ -212,7 +213,7 @@ namespace PacMan_v2
             
 
             P1.score += D.Take(P1.x, P1.y);
-            P1.lvl += U.Take(P1.x, P1.y);
+            U.Take(P1.x, P1.y, P1);
             if (P1.x == P2.x && P1.y == P2.y)
             {
                 if (P1.lvl > P2.lvl)
@@ -270,7 +271,7 @@ namespace PacMan_v2
                 {
                     return "P1killedP2";
                 }
-                return "Draw";
+                return "Tie";
             }
 
             int time = (int)(DateTime.Now - Start).TotalSeconds;
@@ -284,7 +285,7 @@ namespace PacMan_v2
                     {
                         if (L.enemies[i].lvl < P1.lvl)
                         {
-                            L.enemies[i] = new Enemy(0, 0, '#', 's');
+                            L.enemies[i] = new StationaryEnemy(0, 0, '#', 's');
                         }
                         else
                         {
@@ -325,7 +326,7 @@ namespace PacMan_v2
                     {
                         if (L.enemies[i].lvl < P1.lvl)
                         {
-                            L.enemies[i] = new Enemy(0, 0, '#', 's');
+                            L.enemies[i] = new StationaryEnemy(0, 0, '#', 's');
                         }
                         else
                         {
@@ -343,7 +344,7 @@ namespace PacMan_v2
                     {
                         if (L.enemies[i].lvl < P2.lvl)
                         {
-                            L.enemies[i] = new Enemy(0, 0, '#', 's');
+                            L.enemies[i] = new StationaryEnemy(0, 0, '#', 's');
                         }
                         else
                         {
@@ -359,7 +360,7 @@ namespace PacMan_v2
                     }
                 }
                 P2.score += D.Take(P2.x, P2.y);
-                P2.lvl += U.Take(P2.x, P2.y);
+                U.Take(P2.x, P2.y, P2);
                 if (P1.x == P2.x && P1.y == P2.y)
                 {
                     if (P1.lvl > P2.lvl)
@@ -417,7 +418,7 @@ namespace PacMan_v2
                     {
                         return "P1killedP2";
                     }
-                    return "Draw";
+                    return "Tie";
                 }
                 if (D.CurrentLeft == 0)
                 {
@@ -444,7 +445,7 @@ namespace PacMan_v2
                         }
                     }
                    
-                    return "Draw";
+                    return "Tie";
                 }
 
                 if (time <= 0)
@@ -472,7 +473,7 @@ namespace PacMan_v2
                         }
                     }
 
-                    return "Draw";
+                    return "Tie";
                 }
 
             }

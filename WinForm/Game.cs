@@ -60,7 +60,14 @@ namespace WinForm
                     }
                     else
                     {
-                        PointDraw.Draw(null, new DrawEventArgs(L.field[col, row].ch, new Rectangle(col * cellWidth, row * cellHeight, cellWidth, cellHeight), ' '));
+                        if (L.field[col, row].ch == '@')
+                        {
+                            PointDraw.Draw(null, new DrawEventArgs(L.field[col, row].ch, new Rectangle(col * cellWidth, row * cellHeight, cellWidth, cellHeight), logic.P2.direction));
+                        }
+                        else
+                        {
+                            PointDraw.Draw(null, new DrawEventArgs(L.field[col, row].ch, new Rectangle(col * cellWidth, row * cellHeight, cellWidth, cellHeight), ' '));
+                        }
                     }
                     //L.field[col, row].DrawWF();
                 }
@@ -331,11 +338,11 @@ namespace WinForm
                 char hintCh;
                 if (logic.P1.CanPass(logic.FinishPoint.x, logic.FinishPoint.y, logic.L))
                 {
-                    hintCh = logic.P1.FindPathAvoidingEnemies(logic.FinishPoint.x, logic.FinishPoint.y, logic.L, 0);
+                    hintCh = logic.P1.FindPathAvoidingEnemies(logic.FinishPoint.x, logic.FinishPoint.y, logic.L, 2);
                 }
                 else
                 {
-                    hintCh = logic.P1.FindPathAvoidingEnemies(logic.P1.ClosestUpgradeX(logic.L, logic.U), logic.P1.ClosestUpgradeY(logic.L, logic.U), logic.L, 0);
+                    hintCh = logic.P1.FindPathAvoidingEnemies(logic.P1.ClosestUpgradeX(logic.L, logic.U), logic.P1.ClosestUpgradeY(logic.L, logic.U), logic.L, 2);
                 }
 
                 if (hintCh == 'r') { hint = "Right"; }
@@ -377,6 +384,11 @@ namespace WinForm
         }
 
         private void Hint_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Game_Load(object sender, EventArgs e)
         {
 
         }

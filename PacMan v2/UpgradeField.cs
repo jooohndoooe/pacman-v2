@@ -23,28 +23,49 @@ namespace PacMan_v2
 
             for (int i = 0; i < sizeX; i++) {
                 for (int j = 0; j < sizeY; j++) {
-                    this.field[i, j] = new Upgrade(i, j, false);
+                    this.field[i, j] = new Upgrade(i, j, false, 'U');
                 }
             }
 
-            for (int i = 0; i < max; i++) 
+            for (int i = 0; i < max + L.sizeX / 10; i++)
             {
                 Random r = new Random();
-                int RandomX = r.Next() % (L.sizeX - 2)+1;
+                int RandomX = r.Next() % (L.sizeX - 3) + 1;
                 int z = -1;
                 List<int> PossibleY = new List<int>();
-                for (int j = 0; j < sizeY; j++) { if (L.field[RandomX, j].lvl == 0) { PossibleY.Add(j); } }
+                for (int j = 0; j < sizeY; j++) { if (L.field[RandomX, j].lvl < 5) { PossibleY.Add(j); } }
                 int RandomY = PossibleY[r.Next() % PossibleY.Count];
-                if ((RandomX == 1 && RandomY == 1) || (RandomX == sizeX - 2 && RandomY == sizeY - 2) || D.field[RandomX, RandomY].status == false) { i--; continue; }
-                D.Delete(RandomX, RandomY);
-                this.field[RandomX, RandomY] = new Upgrade(RandomX, RandomY, true);
+                if ((RandomX == 1 && RandomY == 1) || (RandomX == sizeX - 2 && RandomY == sizeY - 2)) 
+                {
+                    i--; 
+                    continue;
+                }
+                if (r.Next() % 2 == 0)
+                {
+                    D.Delete(RandomX, RandomY);
+                }
+                if (i < max)
+                {
+                    this.field[RandomX, RandomY] = new Upgrade(RandomX, RandomY, true, 'U');
+                }
+                else
+                {
+                    this.field[RandomX, RandomY] = new Upgrade(RandomX, RandomY, true, 'H');
+                }
             }
         }
 
 
-        public int Take(int x, int y)
+        public void Take(int x, int y, Player P1)
         {
-            if (field[x, y].status == true) { field[x, y].Take(); this.current--; return 1; } else { return 0; }
+            if (field[x, y].type == 'U')
+            {
+                if (field[x, y].status == true) { field[x, y].Take(); this.current--; P1.lvl++; }
+            }
+            if (field[x, y].type == 'H')
+            {
+                if (field[x, y].status == true) { field[x, y].Take(); this.current--; P1.lives++; }
+            }
         }
     }
 }

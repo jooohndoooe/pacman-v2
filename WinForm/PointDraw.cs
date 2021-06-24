@@ -12,51 +12,47 @@ namespace PacMan_v2
     {
         public static Graphics graphics { get; set; }
         public static int PacManStatus { get; set; } = 0;
+        public static int PacManStatus2 { get; set; } = 0;
 
         private readonly static Bitmap PacManRightTexture = Resources.PacMan,
             PacMan2Texture = Resources.PacMan2,
             GhostTexture = Resources.Ghost1,
             PacManLeftTexture = Resources.PacManLeft,
             PacManDownTexture = Resources.PacManDown,
-            PacManUpTexture = Resources.PacManUp;
-            
+            PacManUpTexture = Resources.PacManUp,
+            WallTexture = Resources.Wall,
+            DotTexture = Resources.Wall1,
+            UpgradeTexture = Resources.Upgrade,
+            FinishTexture = Resources.Finish,
+            PacManRightTexture2 = Resources._2PacMan,
+            PacMan2Texture2 = Resources._2PacMan2,
+            PacManLeftTexture2 = Resources._2PacManLeft,
+            PacManDownTexture2 = Resources._2PacManDown,
+            PacManUpTexture2 = Resources._2PacManUp,
+            CrackedWallTexture = Resources.CrackedWall,
+            HealthTexture = Resources.Health,
+            BigDotTexture = Resources.BigDot,
+            DotInAWallTexture = Resources.DotInAWall,
+            BigDotInAWallTexture = Resources.BigDotInAWall,
+            UpgradeInAWallTexture = Resources.UpgradeInAWall,
+            HealthInAWallTexture = Resources.HealthInAWall,
+            DotInAnUpgradeTexture = Resources.DotInAnUpgrade,
+            DotInHealthTexture = Resources.DotInHealth,
+            BigDotInAnUpgradeTexture = Resources.BigDotInAnUpgrade,
+            BigDotinHealthTexture = Resources.BigDotInHealth,
+            DotInAnUpgradeInAWallTexture = Resources.DotInAnUpgradeInAWall,
+            BigDotInAnUpgradeInAWallTexture = Resources.BigDotInAnUpgrade,
+            DotInHealthInAWallTexture = Resources.DotInHealthInAWall,
+            BigDotInHealthInAWallTexture = Resources.BigDotInAnUpgradeInAWall;
+
+
 
         public static void Draw(object sender, DrawEventArgs e)
         {
-            if (e.ch == '#')
-            {
-                using var brush = new SolidBrush(Color.Red);
-                graphics.FillRectangle(brush, e.cellRect);
-                return;
-            }
-            if (e.ch == ' ')
-            {
-                using var brush = new SolidBrush(Color.Transparent);
-                graphics.FillRectangle(brush, e.cellRect);
-                return;
-            }
-            if (e.ch == '.')
-            {
-                using var brush = new SolidBrush(Color.LightGray);
-                graphics.FillRectangle(brush, e.cellRect);
-                return;
-            }
-            if (e.ch == 'F')
-            {
-                using var brush = new SolidBrush(Color.Brown);
-                graphics.FillRectangle(brush, e.cellRect);
-                return;
-            }
-            if (e.ch == '&')
-            {
-                using var brush = new SolidBrush(Color.Orange);
-                graphics.FillRectangle(brush, e.cellRect);
-                return;
-            }
             if (e.ch == 'O')
             {
                 PacManStatus++;
-                using var brush = new SolidBrush(Color.Purple);
+
                 if (PacManStatus % 2 == 0)
                 {
                     if (e.direction == 'r')
@@ -80,37 +76,88 @@ namespace PacMan_v2
                 {
                     graphics.DrawImage(PacMan2Texture, e.cellRect);
                 }
-                //graphics.FillRectangle(brush, e.cellRect);
                 return;
             }
             if (e.ch == '@')
             {
-                using var brush = new SolidBrush(Color.Pink);
+                PacManStatus2++;
+
+                if (PacManStatus2 % 2 == 0)
+                {
+                    if (e.direction == 'r')
+                    {
+                        graphics.DrawImage(PacManRightTexture2, e.cellRect);
+                    }
+                    if (e.direction == 'l')
+                    {
+                        graphics.DrawImage(PacManLeftTexture2, e.cellRect);
+                    }
+                    if (e.direction == 'u')
+                    {
+                        graphics.DrawImage(PacManUpTexture2, e.cellRect);
+                    }
+                    if (e.direction == 'd')
+                    {
+                        graphics.DrawImage(PacManDownTexture2, e.cellRect);
+                    }
+                }
+                else
+                {
+                    graphics.DrawImage(PacMan2Texture2, e.cellRect);
+                }
+                return;
+            }
+
+            Dictionary<char, Bitmap> ImageList = new Dictionary<char, Bitmap>();
+            ImageList.Add('#', WallTexture);
+            ImageList.Add('C', CrackedWallTexture);
+            ImageList.Add('.', DotTexture);
+            ImageList.Add('F', FinishTexture); 
+            ImageList.Add('&', UpgradeTexture);
+            ImageList.Add('<', GhostTexture);
+            ImageList.Add('>', GhostTexture);
+            ImageList.Add('A', GhostTexture);
+            ImageList.Add('V', GhostTexture);
+            for (int i = 0; i < 10; i++) 
+            {
+                ImageList.Add(i.ToString()[0], GhostTexture);
+            }
+            ImageList.Add('$', HealthTexture);
+            ImageList.Add('*', BigDotTexture);
+            ImageList.Add(',', DotInAWallTexture);
+            ImageList.Add('`', BigDotInAWallTexture);
+            ImageList.Add('U', UpgradeInAWallTexture);
+            ImageList.Add('H', HealthInAWallTexture);
+            ImageList.Add('D', DotInAnUpgradeTexture);
+            ImageList.Add('d', DotInHealthTexture);
+            ImageList.Add('P', BigDotInAnUpgradeTexture);
+            ImageList.Add('p', BigDotinHealthTexture);
+            ImageList.Add('T', DotInAnUpgradeInAWallTexture);
+            ImageList.Add('X', BigDotInAnUpgradeInAWallTexture);
+            ImageList.Add('t', DotInHealthInAWallTexture);
+            ImageList.Add('x', BigDotInHealthInAWallTexture);
+
+            if (e.ch == ' ')
+            {
+                using var brush = new SolidBrush(Color.Transparent);
                 graphics.FillRectangle(brush, e.cellRect);
                 return;
             }
-            if (e.ch == '<' || e.ch == '>' || e.ch == 'V' || e.ch == 'A')
-            {
-                using var brush = new SolidBrush(Color.Cyan);
-                graphics.DrawImage(GhostTexture, e.cellRect);
 
-                //graphics.FillRectangle(brush, e.cellRect);
-                return;
-            }
-            if (e.ch >= '1' && e.ch <= '9')
-            {
-                using var brush = new SolidBrush(Color.Pink);
-                graphics.DrawImage(GhostTexture, e.cellRect);
+            graphics.DrawImage(ImageList[e.ch], e.cellRect);
 
-                //graphics.FillRectangle(brush, e.cellRect);
-                return;
-            }
-            if (e.ch == 'B')
+
+
+
+            
+            
+            
+            /*if (e.ch == 'B')
             {
                 using var brush = new SolidBrush(Color.DarkGray);
                 graphics.FillRectangle(brush, e.cellRect);
                 return;
-            }
+            }*/
         }
     }
 

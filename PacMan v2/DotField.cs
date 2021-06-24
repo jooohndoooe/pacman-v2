@@ -22,11 +22,19 @@ namespace PacMan_v2
                 for (int j = 0; j < L.sizeY; j++) {
                     if (L.field[i, j].ch == ' ')
                     {
-                        field[i, j] = new Dot(i, j, true); this.MaxScore++;
+                        field[i, j] = new Dot(i, j, true); this.MaxScore+=field[i,j].value;
                     }
                     else 
                     { 
                         field[i, j] = new Dot(i, j, false); 
+                    }
+                    if (L.field[i, j].ch == 'C')
+                    {
+                        Random r = new Random();
+                        if (r.Next() % 2 == 0)
+                        {
+                            field[i, j] = new Dot(i, j, true); this.MaxScore += field[i, j].value;
+                        }
                     }
                 }
             }
@@ -35,7 +43,7 @@ namespace PacMan_v2
 
         public int Take(int x,int y)
         {
-            if (field[x, y].status == true) { field[x, y].Take(); this.CurrentLeft--; return 1; } else { return 0; }
+            if (field[x, y].status == true) { field[x, y].Take(); this.CurrentLeft--; return field[x,y].value; } else { return 0; }
         }
 
         public void Delete(int a, int b)

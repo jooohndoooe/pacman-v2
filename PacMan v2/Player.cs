@@ -121,6 +121,8 @@ namespace PacMan_v2
 
         public int DistanceAvoidingEnemies(int destinationX, int destinationY, Level L, int carefullness)  
         {
+            
+            
             int[,] distanceArray = new int[L.sizeX, L.sizeY];
             int[,] distanceArrayBackup = new int[L.sizeX, L.sizeY];
             for (int i = 0; i < L.sizeX; i++)
@@ -177,14 +179,85 @@ namespace PacMan_v2
             carefullness = 5;
             for(int i = 0; i < L.EnemyCount; i++) 
             {
-                if (distance(L.enemies[i].x, L.enemies[i].y, L) < carefullness) { return true; }
+                if (L.enemies[i].lvl >= this.lvl)
+                {
+                    if (distance(L.enemies[i].x, L.enemies[i].y, L) < carefullness) { return true; }
+                }
             }
             return false;
+        }
+
+        public void SetPoint(int x, int y, int previousX, int previousY, bool[,] visited, int[,] distance, int[,] distanceA, Level L) 
+        {
+            if (x >= 0 && x < L.sizeX && y >= 0 && y < L.sizeY && !visited[x, y] && L.field[x, y].lvl < this.lvl)
+            {
+                //visited[x, y] = true;
+                distance[x, y] = distance[previousX, previousY] + 1;
+                distanceA[x, y] = distance[x, y] + Math.Abs(this.x - x) + Math.Abs(this.y - y);
+            }
         }
 
         public char FindPathAvoidingEnemies(int destinationX, int destinationY, Level L, int carefullness)
         {
             if (destinationX == this.x && destinationY == this.y) { return 'r'; }
+            if (destinationX == this.x + 1 && destinationY == this.y) { return 'r'; }
+            if (destinationX == this.x - 1 && destinationY == this.y) { return 'l'; }
+            if (destinationY == this.y - 1 && destinationX == this.x) { return 'u'; }
+            if (destinationY == this.y + 1 && destinationX == this.x) { return 'd'; }
+
+            bool[,] visited = new bool[L.sizeX,L.sizeY];
+            int[,] distance = new int[L.sizeX, L.sizeY];
+            int[,] distanceA = new int[L.sizeX, L.sizeY];
+            for (int i = 0; i < L.sizeX; i++) 
+            {
+                for (int j = 0; j < L.sizeY; j++) 
+                {
+                    visited[i, j] = false;
+                    distance[i, j] = 1000000;
+                    distanceA[i, j] = 1000000;
+                }
+            }
+            visited[destinationX, destinationY] = true;
+            distance[destinationX, destinationY] = 0;
+            distanceA[destinationX, destinationY] = 0;
+
+            int currentX = destinationX;
+            int currentY = destinationY;
+
+            while (!visited[this.x, this.y]) 
+            {
+                visited[currentX, currentY] = true;
+                SetPoint(currentX - 1, currentY, currentX, currentY, visited, distance, distanceA, L);
+                SetPoint(currentX + 1, currentY, currentX, currentY, visited, distance, distanceA, L);
+                SetPoint(currentX, currentY - 1, currentX, currentY, visited, distance, distanceA, L);
+                SetPoint(currentX, currentY + 1, currentX, currentY, visited, distance, distanceA, L);
+
+                int min = 1000000;
+                int minX = -1;
+                int minY = -1;
+                for (int i = 0; i < L.sizeX; i++) 
+                {
+                    for (int j = 0; j < L.sizeY; j++) 
+                    {
+                        if (!visited[i, j] && distanceA[i, j] < min) 
+                        {
+                            minX = i;
+                            minY = j;
+                            min = distanceA[i, j];
+                        }
+                    }
+                }
+
+                currentX = minX;
+                currentY = minY;
+            }
+
+            if (visited[this.x + 1, this.y]) { return 'r'; }
+            if (visited[this.x - 1, this.y]) { return 'l'; }
+            if (visited[this.x, this.y - 1]) { return 'u'; }
+            if (visited[this.x, this.y + 1]) { return 'd'; }
+            return ' ';
+            /*if (destinationX == this.x && destinationY == this.y) { return 'r'; }
             if (destinationX == this.x + 1 && destinationY == this.y) { return 'r'; }
             if (destinationX == this.x - 1 && destinationY == this.y) { return 'l'; }
             if (destinationY == this.y - 1 && destinationX == this.x) { return 'u'; }
@@ -215,10 +288,22 @@ namespace PacMan_v2
                         if (L.field[i, j].lvl == 0 && distanceArray[i, j] == 0)
                         {
                             int min = 10000;
-                            if (distanceArrayBackup[i + 1, j] != 0 && distanceArrayBackup[i + 1, j] < min && L.field[i + 1, j].lvl < this.lvl) { min = distanceArrayBackup[i + 1, j]; }
-                            if (distanceArrayBackup[i - 1, j] != 0 && distanceArrayBackup[i - 1, j] < min && L.field[i - 1, j].lvl < this.lvl) { min = distanceArrayBackup[i - 1, j]; }
-                            if (distanceArrayBackup[i, j + 1] != 0 && distanceArrayBackup[i, j + 1] < min && L.field[i, j + 1].lvl < this.lvl) { min = distanceArrayBackup[i, j + 1]; }
-                            if (distanceArrayBackup[i, j - 1] != 0 && distanceArrayBackup[i, j - 1] < min && L.field[i, j - 1].lvl < this.lvl) { min = distanceArrayBackup[i, j - 1]; }
+                            if (i < L.sizeX - 1)
+                            {
+                                if (distanceArrayBackup[i + 1, j] != 0 && distanceArrayBackup[i + 1, j] < min && L.field[i + 1, j].lvl < this.lvl) { min = distanceArrayBackup[i + 1, j]; }
+                            }
+                            if (i > 0)
+                            {
+                                if (distanceArrayBackup[i - 1, j] != 0 && distanceArrayBackup[i - 1, j] < min && L.field[i - 1, j].lvl < this.lvl) { min = distanceArrayBackup[i - 1, j]; }
+                            }
+                            if (j < L.sizeY - 1)
+                            {
+                                if (distanceArrayBackup[i, j + 1] != 0 && distanceArrayBackup[i, j + 1] < min && L.field[i, j + 1].lvl < this.lvl) { min = distanceArrayBackup[i, j + 1]; }
+                            }
+                            if (j > 0)
+                            {
+                                if (distanceArrayBackup[i, j - 1] != 0 && distanceArrayBackup[i, j - 1] < min && L.field[i, j - 1].lvl < this.lvl) { min = distanceArrayBackup[i, j - 1]; }
+                            }
                             min++;
                             if (min < 10000)
                             {
@@ -267,7 +352,7 @@ namespace PacMan_v2
             if (yDirection == y - 1) { return 'u'; }
 
             
-            return ' ';
+            return ' ';*/
         }
     }
 }

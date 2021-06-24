@@ -60,6 +60,7 @@ namespace WinForm
             // timer1
             // 
             this.timer1.Enabled = true;
+            this.timer1.Interval = 200;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // P1ScoreLabel
@@ -365,6 +366,7 @@ namespace WinForm
             this.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.Name = "Game";
             this.Size = new System.Drawing.Size(2511, 1338);
+            this.Load += new System.EventHandler(this.Game_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

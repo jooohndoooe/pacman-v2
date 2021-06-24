@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PacMan_v2
 {
-    public class Enemy:Entity
+    public abstract class Enemy:Entity
     {
         public char role { get; set; }
         public int slowness { get; set; }
@@ -14,7 +14,7 @@ namespace PacMan_v2
         public Enemy(int x, int y, char ch, char direction, int level, char role) : base(x, y, ch, direction, level) {
             SetBase(role);
         }
-        public Enemy(int x, int y, char ch, char direction, char role) : base(x, y, ch, direction, role) {
+        public Enemy(int x, int y, char ch, char direction, char role) : base(x, y, ch, direction) {
             SetBase(role);
         }
         public Enemy(int x, int y, char ch, int lvl, char role) : base(x, y, ch, lvl) {
@@ -39,202 +39,7 @@ namespace PacMan_v2
             this.role = _ch;
         }
 
-        public void Go(Level L, DotField D, UpgradeField U, Player P1, Player P2) 
-        {
-            if (ch < '0' || ch > '9') 
-            {
-                if (direction == 'r') { this.ch = '>'; }
-                if (direction == 'l') { this.ch = '<'; }
-                if (direction == 'u') { this.ch = 'A'; }
-                if (direction == 'd') { this.ch = 'V'; }
-            }
-
-            if (role == 's') 
-            { 
-            //Yup, he's stationary
-            }
-            if (role == 'l')
-            {
-                GoLine(L, D, U, P1, P2);
-            }
-            if (role == 'r')
-            {
-                GoRandom(L, D, U, P1, P2);
-            }
-            if (slownessCounter % slowness == 0)
-            {
-                if (role == 'p')
-                {
-                    GoPursuit(L, D, U, P1, P2);
-                }
-                if (role == 'i')
-                {
-                    GoIntersect(L, D, U, P1, P2);
-                }
-                if (role == 'f') 
-                {
-                    GoF(L, D, U, P1, P2);
-                }
-            }
-            this.slownessCounter++;
-
-            if (role == 'g')
-            {
-                GoGuard(L, D, U, P1, P2);
-            }
-        }
-
-        public void GoLine(Level L, DotField D, UpgradeField U, Player P1, Player P2) 
-        {
-            if (direction == 'r') { GoInDirectionAndBounce(1, 0, L, D, U); }
-            if (direction == 'l') { GoInDirectionAndBounce(-1, 0, L, D, U); }
-            if (direction == 'u') { GoInDirectionAndBounce(0, -1, L, D, U); }
-            if (direction == 'd') { GoInDirectionAndBounce(0, 1, L, D, U); }
-        }
-
-        public void GoRandom(Level L, DotField D, UpgradeField U, Player P1, Player P2) 
-        {
-            if (direction == 'r') { GoInDirectionAndBounceRandomly(1, 0, L, D, U); }
-            if (direction == 'l') { GoInDirectionAndBounceRandomly(-1, 0, L, D, U); }
-            if (direction == 'u') { GoInDirectionAndBounceRandomly(0, -1, L, D, U); }
-            if (direction == 'd') { GoInDirectionAndBounceRandomly(0, 1, L, D, U); }
-        }
-
-        public void GoPursuit(Level L, DotField D, UpgradeField U, Player P1, Player P2) 
-        {
-            if (distance(P1.x, P1.y, L) < distance(P2.x, P2.y, L))
-            {
-                GoToDestination(P1.x, P1.y, L, D, U);
-            }
-            else
-            {
-                GoToDestination(P2.x, P2.y, L, D, U);
-            }
-        }
-
-        public void GoIntersect(Level L, DotField D, UpgradeField U, Player P1, Player P2) 
-        {
-            int P1PredictedX = PredictedX(L, P1);
-            int P1PredictedY = PredictedY(L, P1);
-            int P2PredictedX = PredictedX(L, P2);
-            int P2PredictedY = PredictedY(L, P2);
-
-            if (distance(P1.x, P1.y, L) <= distance(P2.x, P2.y, L))
-            {
-                if (IsInSight(L, P1) == false)
-                {
-                    GoToDestination(P1PredictedX, P1PredictedY, L, D, U);
-                }
-                else
-                {
-                    GoToDestination(P1.x, P1.y, L, D, U);
-                }
-            }
-            else
-            {
-                if (IsInSight(L, P2) == false)
-                {
-                    GoToDestination(P2PredictedX, P2PredictedY, L, D, U);
-                }
-                else
-                {
-                    GoToDestination(P2.x, P2.y, L, D, U);
-                }
-            }
-        }
-
-        public void GoF(Level L, DotField D, UpgradeField U, Player P1, Player P2) 
-        {
-            int[,] priority1 = new int[L.sizeX, L.sizeY];
-            int[,] priority2 = new int[L.sizeX, L.sizeY];
-
-            int maxPriority = 0;
-            int maxX = -1;
-            int maxY = -1;
-
-            for (int i = 0; i < L.sizeX; i++) 
-            {
-                for (int j = 0; j < L.sizeY; j++) 
-                {
-                    if (D.field[i, j].status) 
-                    {
-                        priority1[i, j] = L.sizeX * L.sizeY - P1.distance(i,j,L);
-                        priority2[i, j] = L.sizeX * L.sizeY - P2.distance(i, j, L);
-
-                    }
-                    if (U.field[i, j].status) 
-                    {
-                        priority1[i, j] = L.sizeX * L.sizeY - P1.distance(i, j, L) * 20;
-                        priority2[i, j] = L.sizeX * L.sizeY - P2.distance(i, j, L) * 20;
-                    }
-                }
-            }
-
-            for (int i = 0; i < L.sizeX; i++) 
-            {
-                for (int j = 0; j < L.sizeY; j++) 
-                {
-                    if (priority1[i,j] > maxPriority) { maxPriority = priority1[i, j]; maxX = i; maxY = j; }
-                    if (priority2[i, j] > maxPriority) { maxPriority = priority2[i, j]; maxX = i; maxY = j; }
-
-                }
-            }
-
-
-
-            if (distance(P1.x, P1.y, L) <= distance(P2.x, P2.y, L))
-            {
-                if (IsInSight(L, P1) == false)
-                {
-                    GoToDestination(maxX, maxY, L, D, U);
-                }
-                else
-                {
-                    GoToDestination(P1.x, P1.y, L, D, U);
-                }
-            }
-            else
-            {
-                if (IsInSight(L, P2) == false)
-                {
-                    GoToDestination(maxX, maxY, L, D, U);
-                }
-                else
-                {
-                    GoToDestination(P2.x, P2.y, L, D, U);
-                }
-            }
-        }
-
-        public void GoGuard(Level L, DotField D, UpgradeField U, Player P1, Player P2) 
-        {
-            if (IsInSight(L, P1) == true)
-            {
-                if (IsInSight(L, P2) == true)
-                {
-                    if (distance(P1.x, P1.y, L) <= distance(P2.x, P2.y, L))
-                    {
-                        GoToDestination(P1.x, P1.y, L, D, U);
-                    }
-                    else
-                    {
-                        GoToDestination(P2.x, P2.y, L, D, U);
-                    }
-                }
-            }
-            else
-            {
-                if (IsInSight(L, P2) == true)
-                {
-                    GoToDestination(P2.x, P2.y, L, D, U);
-                }
-                else
-                {
-                    //Stay and wait baiting him
-                }
-            }
-        }
-
+        public abstract void Go(Level L, DotField D, UpgradeField U, Player P1, Player P2);
 
         public void GravityGo(Level L, DotField D, UpgradeField U, Player P1, Player P2, GravityField G)
         {

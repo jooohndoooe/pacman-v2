@@ -199,9 +199,63 @@ namespace PacMan_v2
             if (FindPath(destinationX, destinationY, L) == 'd') { GoInDirection(0, 1, L, D, U); }
         }
 
+        public void SetPoint(int x, int y, int previousX, int previousY, int[,] distance, bool[,] visited, List<int> XListNew, List<int> YListNew, Level L) 
+        {
+            if (x >= 0 && x < L.sizeX && y >= 0 && y < L.sizeY && !visited[x, y] && L.field[x, y].lvl < this.lvl) 
+            {
+                visited[x, y] = true;
+                distance[x, y] = distance[previousX, previousY] + 1;
+                XListNew.Add(x);
+                YListNew.Add(y);
+            }
+        }
+
         public char FindPath(int destinationX, int destinationY, Level L)
         {
-            int[,] distanceArray = new int[L.sizeX, L.sizeY];
+            if (destinationX == this.x && destinationY == this.y) { return 'r'; }
+            if (destinationX == this.x + 1 && destinationY == this.y) { return 'r'; }
+            if (destinationX == this.x - 1 && destinationY == this.y) { return 'l'; }
+            if (destinationY == this.y - 1 && destinationX == this.x) { return 'u'; }
+            if (destinationY == this.y + 1 && destinationX == this.x) { return 'd'; }
+            int[,] distance = new int[L.sizeX, L.sizeY];
+            bool[,] visited = new bool[L.sizeX, L.sizeY];
+            for (int i = 0; i < L.sizeX; i++)
+            {
+                for (int j = 0; j < L.sizeY; j++)
+                {
+                    visited[i, j] = false;
+                    distance[i, j] = 1000000;
+                }
+            }
+            distance[destinationX, destinationY] = 0;
+
+            List<int> Xlist = new List<int>();
+            List<int> Ylist = new List<int>();
+            Xlist.Add(destinationX);
+            Ylist.Add(destinationY);
+
+            while (!visited[this.x, this.y])
+            {
+                List<int> XlistNew = new List<int>();
+                List<int> YlistNew = new List<int>();
+                for (int i = 0; i < Xlist.Count; i++) 
+                {
+                    SetPoint(Xlist[i] + 1, Ylist[i], Xlist[i], Ylist[i], distance, visited, XlistNew, YlistNew, L);
+                    SetPoint(Xlist[i] - 1, Ylist[i], Xlist[i], Ylist[i], distance, visited, XlistNew, YlistNew, L);
+                    SetPoint(Xlist[i], Ylist[i] + 1, Xlist[i], Ylist[i], distance, visited, XlistNew, YlistNew, L);
+                    SetPoint(Xlist[i], Ylist[i] - 1, Xlist[i], Ylist[i], distance, visited, XlistNew, YlistNew, L);
+                }
+
+                Xlist = XlistNew;
+                Ylist = YlistNew;
+            }
+            if (visited[this.x + 1, this.y]) { return 'r'; }
+            if (visited[this.x - 1, this.y]) { return 'l'; }
+            if (visited[this.x, this.y - 1]) { return 'u'; }
+            if (visited[this.x, this.y + 1]) { return 'd'; }
+            return ' ';
+
+            /*int[,] distanceArray = new int[L.sizeX, L.sizeY];
             int[,] distanceArrayBackup = new int[L.sizeX, L.sizeY];
             for (int i = 0; i < L.sizeX; i++)
             {
@@ -272,7 +326,7 @@ namespace PacMan_v2
             if (xDirection == x - 1) { return 'l'; }
             if (yDirection == y + 1) { return 'd'; }
             if (yDirection == y - 1) { return 'u'; }
-            return ' ';
+            return ' ';*/
         }
         
         public int distance(int destinationX, int destinationY, Level L)
@@ -360,7 +414,7 @@ namespace PacMan_v2
         {
             List<int> DeltaPass = new List<int>();
 
-            if (CurrentX < L.sizeX)
+            if (CurrentX < L.sizeX - 1)
             {
                 if (!visited[CurrentX + 1, CurrentY])
                 {
@@ -386,7 +440,7 @@ namespace PacMan_v2
                     }
                 }
             }
-            if (CurrentY < L.sizeY)
+            if (CurrentY < L.sizeY - 1)
             {
                 if (!visited[CurrentX, CurrentY + 1])
                 {

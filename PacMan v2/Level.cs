@@ -123,32 +123,32 @@ namespace PacMan_v2
             Random r = new Random();
             if (difficulty == 1)
             {
-                this.enemies[i] = new Enemy(x, y, 'A', 1, 's');
+                this.enemies[i] = new StationaryEnemy(x, y, 'A', 1, 's');
             }
             if (difficulty == 2)
             {
-                this.enemies[i] = new Enemy(x, y, 'A', 1, 'l');
+                this.enemies[i] = new LineEnemy(x, y, 'A', 1, 'l');
             }
             if (difficulty == 3)
             {
-                this.enemies[i] = new Enemy(x, y, 'A', 1, 'r');
+                this.enemies[i] = new RandomEnemy(x, y, 'A', 1, 'r');
             }
             if (difficulty == 4)
             {
-                if (i == 0) { this.enemies[i] = new Enemy(x, y, (char)(temp + 48), temp, 'p'); if (temp >= 2) { temp--; } }
-                if (i == 1) { this.enemies[i] = new Enemy(x, y, (char)(temp + 48), temp, 'i'); if (temp >= 2) { temp--; } }
-                if (i >= 2) { this.enemies[i] = new Enemy(x, y, (char)(temp + 48), temp, 'r'); if (temp >= 2) { temp--; } }
+                if (i == 0) { this.enemies[i] = new PursuerEnemy(x, y, (char)(temp + 48), temp, 'p'); if (temp >= 2) { temp--; } }
+                if (i == 1) { this.enemies[i] = new IntersectorEnemy(x, y, (char)(temp + 48), temp, 'i'); if (temp >= 2) { temp--; } }
+                if (i >= 2) { this.enemies[i] = new RandomEnemy(x, y, (char)(temp + 48), temp, 'r'); if (temp >= 2) { temp--; } }
             }
 
             if (difficulty == 5)
             {
-                if (i == 0) { this.enemies[i] = new Enemy(x, y, (char)(temp + 48), temp, 'f'); if (temp >= 2) { temp--; } }
-                if (i == 1) { this.enemies[i] = new Enemy(x, y, (char)(temp + 48), temp, 'i'); if (temp >= 2) { temp--; } }
+                if (i == 0) { this.enemies[i] = new CalculatorEnemy(x, y, (char)(temp + 48), temp, 'f'); if (temp >= 2) { temp--; } }
+                if (i == 1) { this.enemies[i] = new IntersectorEnemy(x, y, (char)(temp + 48), temp, 'i'); if (temp >= 2) { temp--; } }
                 if (i >= 2)
                 {
                     int z = r.Next() % 2;
-                    if (z == 0) { this.enemies[i] = new Enemy(x, y, (char)(temp + 48), temp, 'r'); if (temp >= 2) { temp--; } }
-                    if (z == 1) { this.enemies[i] = new Enemy(x, y, (char)(temp + 48), temp, 'g'); if (temp >= 2) { temp--; } }
+                    if (z == 0) { this.enemies[i] = new RandomEnemy(x, y, (char)(temp + 48), temp, 'r'); if (temp >= 2) { temp--; } }
+                    if (z == 1) { this.enemies[i] = new GuardianEnemy(x, y, (char)(temp + 48), temp, 'g'); if (temp >= 2) { temp--; } }
                 }
             }
         }
@@ -183,8 +183,98 @@ namespace PacMan_v2
             for (int i = 0; i < L.sizeX; i++) {
                 for (int j = 0; j < L.sizeY; j++) {
                     this.field[i, j] = L.field[i, j];
-                    if (D.field[i, j].status) { this.field[i, j] = new Point(i,j,'.'); }
-                    if (U.field[i, j].status) { this.field[i, j] = new Point(i, j, '&'); }
+                    if (D.field[i, j].status) {
+                        if (this.field[i, j].ch == ' ')
+                        {
+                            if (D.field[i, j].value == 1)
+                            {
+                                this.field[i, j] = new Point(i, j, '.');
+                            }
+                            else
+                            {
+                                this.field[i, j] = new Point(i, j, '*');
+                            }
+                        }
+                        else
+                        {
+                            if (D.field[i, j].value == 1)
+                            {
+                                this.field[i, j] = new Point(i, j, ',');
+                            }
+                            else
+                            {
+                                this.field[i, j] = new Point(i, j, '`');
+                            }
+                        }
+                    }
+                    if (U.field[i, j].status) {
+                        if (this.field[i, j].ch == ' ')
+                        {
+                            if (U.field[i, j].type == 'U')
+                            {
+                                this.field[i, j] = new Point(i, j, '&');
+                            }
+                            else
+                            {
+                                this.field[i, j] = new Point(i, j, '$');
+                            }
+                        }
+                        if (this.field[i, j].ch == '.')
+                        {
+                            if (U.field[i, j].type == 'U')
+                            {
+                                this.field[i, j] = new Point(i, j, 'D');
+                            }
+                            else
+                            {
+                                this.field[i, j] = new Point(i, j, 'd');
+                            }
+                        }
+                        if (this.field[i, j].ch == '*')
+                        {
+                            if (U.field[i, j].type == 'U')
+                            {
+                                this.field[i, j] = new Point(i, j, 'P');
+                            }
+                            else
+                            {
+                                this.field[i, j] = new Point(i, j, 'p');
+                            }
+                        }
+                        if (this.field[i, j].ch == ',')
+                        {
+                            if (U.field[i, j].type == 'U')
+                            {
+                                this.field[i, j] = new Point(i, j, 'T');
+                            }
+                            else
+                            {
+                                this.field[i, j] = new Point(i, j, 't');
+                            }
+                        }
+                        if (this.field[i, j].ch == '`')
+                        {
+                            if (U.field[i, j].type == 'U')
+                            {
+                                this.field[i, j] = new Point(i, j, 'X');
+                            }
+                            else
+                            {
+                                this.field[i, j] = new Point(i, j, 'x');
+                            }
+                        }
+                        if (this.field[i, j].ch == '#')
+                        {
+                            if (U.field[i, j].type == 'U')
+                            {
+                                this.field[i, j] = new Point(i, j, 'U');
+                            }
+                            else
+                            {
+                                this.field[i, j] = new Point(i, j, 'H');
+                            }
+                        }
+                    }
                     if (L.difficulty == 2)
                     {
                         if (Math.Sqrt((i - P1.x) * (i - P1.x) + (j - P1.y) * (j - P1.y)) > 3) {
@@ -242,6 +332,25 @@ namespace PacMan_v2
             if (this.field[x, y].ch == ' ')
             {
                 this.field[x, y] = new Point(x, y, 'B', lvl);
+            }
+        }
+
+        public void RandomCrack(int count)
+        {
+            Random r = new Random();
+            for (int i = 0; i < count; i++)
+            {
+                int x = r.Next() % (this.sizeX - 3); x++;
+                int z = 0;
+                int[] arr = new int[this.sizeY];
+                z = -1;
+                for (int j = 1; j < this.sizeY - 1; j++) { if (field[x, j].lvl>5) { z++; arr[z] = j; } }
+                z++;
+                if (z == 0) { i--; continue; }
+                int y = r.Next() % z;
+                y = arr[y];
+
+                field[x, y] = new Point(x, y, 'C', 1);
             }
         }
     }
